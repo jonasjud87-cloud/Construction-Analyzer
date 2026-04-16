@@ -1,0 +1,27 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+pydantic==2.11.3
+pydantic-settings==2.8.1
+python-dotenv==1.1.0
+
+# Supabase
+supabase==2.15.2
+
+# Anthropic
+anthropic==0.51.0
+
+# PDF Processing
+pdf2image==1.17.0
+Pillow==11.2.1
+pypdf==5.4.0
+
+# Queue
+celery==5.5.1
+redis==5.2.1
+
+# HTTP Client
+httpx==0.28.1
+
+# Auth
+python-jose[cryptography]==3.4.0
+python-multipart==0.0.20

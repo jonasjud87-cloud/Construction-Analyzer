@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>KI Analyse Plattform — Architektur v2</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f3ef; color: #1a1a1a; padding: 40px 32px; }
+
+h1 { font-size: 20px; font-weight: 600; color: #111; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #999; margin-bottom: 36px; letter-spacing: 0.03em; }
+
+.canvas { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; }
+
+/* ── LAYER ── */
+.layer { display: flex; align-items: stretch; }
+.layer + .layer { margin-top: -1px; }
+
+.lbl { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; min-width: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px 0 0 8px; }
+
+.lcontent { flex: 1; border: 1.5px solid; border-left: none; border-radius: 0 8px 8px 0; padding: 18px 20px; }
+
+/* layer colors */
+.l-user   .lbl { background: #374151; }
+.l-user   .lcontent { border-color: #d1d5db; background: #f9f9f7; }
+
+.l-front  .lbl { background: #1d4ed8; }
+.l-front  .lcontent { border-color: #bfdbfe; background: #eff6ff; }
+
+.l-api    .lbl { background: #0e7490; }
+.l-api    .lcontent { border-color: #a5f3fc; background: #ecfeff; }
+
+.l-domain .lbl { background: #0f766e; }
+.l-domain .lcontent { border-color: #99f6e4; background: #f0fdfa; }
+
+.l-ai     .lbl { background: #6d28d9; }
+.l-ai     .lcontent { border-color: #ddd6fe; background: #f5f3ff; }
+
+.l-data   .lbl { background: #b45309; }
+.l-data   .lcontent { border-color: #fcd34d; background: #fffbeb; }
+
+.l-infra  .lbl { background: #374151; }
+.l-infra  .lcontent { border-color: #d1d5db; background: #f9f9f7; }
+
+/* ── CONNECTOR ── */
+.connector { display: flex; align-items: center; margin: 0 0 0 34px; height: 26px; gap: 10px; }
+.conn-line { flex: 1; border-left: none; position: relative; height: 26px; display: flex; align-items: center; }
+.conn-line::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: #ccc; }
+.conn-arrow { font-size: 10px; color: #aaa; }
+.conn-label { font-size: 10px; color: #aaa; padding: 2px 8px; background: #f0efe9; border: 1px solid #ddd; border-radius: 10px; white-space: nowrap; }
+
+/* ── SECTION TITLE ── */
+.stitle { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.stitle::after { content: ''; flex: 1; height: 1px; background: #e5e5e0; }
+.badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+.badge-green { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.badge-blue  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.badge-teal  { background: #ccfbf1; color: #134e4a; border: 1px solid #5eead4; }
+
+/* ── BOX GRID ── */
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row + .row { margin-top: 10px; }
+
+.box { border-radius: 6px; padding: 11px 14px; flex: 1; min-width: 140px; border: 1px solid; position: relative; }
+.box-tag { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 8px; display: inline-block; margin-bottom: 6px; }
+.box-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.box-sub { font-size: 11px; line-height: 1.5; opacity: 0.8; }
+.box-detail { font-size: 10px; margin-top: 6px; opacity: 0.65; font-style: italic; }
+
+/* box themes */
+.bx-slate  { background: #f1f5f9; border-color: #cbd5e1; }
+.bx-slate .box-title { color: #1e293b; }
+.bx-slate .box-sub { color: #475569; }
+.bx-slate .box-tag { background: #e2e8f0; color: #475569; }
+
+.bx-blue   { background: #dbeafe; border-color: #93c5fd; }
+.bx-blue .box-title { color: #1e3a8a; }
+.bx-blue .box-sub { color: #1d4ed8; }
+.bx-blue .box-tag { background: #bfdbfe; color: #1e40af; }
+
+.bx-indigo { background: #e0e7ff; border-color: #a5b4fc; }
+.bx-indigo .box-title { color: #1e1b4b; }
+.bx-indigo .box-sub { color: #3730a3; }
+.bx-indigo .box-tag { background: #c7d2fe; color: #312e81; }
+
+.bx-cyan   { background: #cffafe; border-color: #67e8f9; }
+.bx-cyan .box-title { color: #164e63; }
+.bx-cyan .box-sub { color: #0e7490; }
+.bx-cyan .box-tag { background: #a5f3fc; color: #155e75; }
+
+.bx-teal   { background: #ccfbf1; border-color: #5eead4; }
+.bx-teal .box-title { color: #134e4a; }
+.bx-teal .box-sub { color: #0f766e; }
+.bx-teal .box-tag { background: #99f6e4; color: #115e59; }
+
+.bx-purple { background: #ede9fe; border-color: #c4b5fd; }
+.bx-purple .box-title { color: #3b0764; }
+.bx-purple .box-sub { color: #5b21b6; }
+.bx-purple .box-tag { background: #ddd6fe; color: #4c1d95; }
+
+.bx-amber  { background: #fef3c7; border-color: #f5c842; }
+.bx-amber .box-title { color: #78350f; }
+.bx-amber .box-sub { color: #92400e; }
+.bx-amber .box-tag { background: #fde68a; color: #78350f; }
+
+.bx-orange { background: #ffedd5; border-color: #fdba74; }
+.bx-orange .box-title { color: #7c2d12; }
+.bx-orange .box-sub { color: #9a3412; }
+.bx-orange .box-tag { background: #fed7aa; color: #7c2d12; }
+
+.bx-green  { background: #dcfce7; border-color: #86efac; }
+.bx-green .box-title { color: #14532d; }
+.bx-green .box-sub { color: #166534; }
+.bx-green .box-tag { background: #bbf7d0; color: #15803d; }
+
+.bx-red    { background: #fee2e2; border-color: #fca5a5; }
+.bx-red .box-title { color: #7f1d1d; }
+.bx-red .box-sub { color: #991b1b; }
+.bx-red .box-tag { background: #fecaca; color: #7f1d1d; }
+
+/* ── HIGHLIGHT BOX ── */
+.box-highlight { border-width: 2px; }
+
+/* ── DIVIDER inside layer ── */
+.idivider { height: 1px; background: #e5e5df; margin: 14px 0; }
+
+/* ── DOMAIN PILLS ── */
+.domain-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.dp { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 12px; border: 1.5px solid; }
+.dp-active { background: #ccfbf1; border-color: #0f766e; color: #0f766e; }
+.dp-future { background: #f1f5f9; border-color: #94a3b8; color: #64748b; font-style: italic; }
+
+/* ── FLOW BAR ── */
+.flowbar { max-width: 1200px; margin: 28px auto 0; background: #fff; border: 1.5px solid #e0dfd8; border-radius: 10px; padding: 18px 22px; }
+.flowbar h2 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin-bottom: 14px; }
+.flow-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.fs { font-size: 11px; padding: 5px 12px; border-radius: 5px; border: 1px solid; white-space: nowrap; }
+.fs-blue   { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
+.fs-cyan   { background: #ecfeff; border-color: #a5f3fc; color: #164e63; }
+.fs-teal   { background: #f0fdfa; border-color: #5eead4; color: #134e4a; }
+.fs-purple { background: #f5f3ff; border-color: #ddd6fe; color: #3b0764; }
+.fs-amber  { background: #fffbeb; border-color: #fcd34d; color: #78350f; }
+.arrow-s { color: #bbb; font-size: 14px; }
+
+/* ── SCHEMA ── */
+.schema { max-width: 1200px; margin: 14px auto 0; background: #fff; border: 1.5px solid #e0dfd8; border-radius: 10px; padding: 18px 22px; }
+.schema h2 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin-bottom: 14px; }
+.schema-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.st { border-radius: 6px; padding: 10px 12px; border: 1px solid; }
+.st-name { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.st-fields { font-size: 11px; line-height: 1.8; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+/* ── COST TABLE ── */
+.costtable { max-width: 1200px; margin: 14px auto 0; background: #fff; border: 1.5px solid #e0dfd8; border-radius: 10px; padding: 18px 22px; }
+.costtable h2 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin-bottom: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; padding: 6px 10px; background: #f4f3ef; color: #555; font-weight: 600; border-bottom: 1px solid #e5e5e0; }
+td { padding: 7px 10px; border-bottom: 1px solid #f0efe9; color: #333; }
+tr:last-child td { border-bottom: none; }
+.pill { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 8px; }
+.pill-green { background: #dcfce7; color: #166534; }
+.pill-amber { background: #fef3c7; color: #78350f; }
+.pill-blue  { background: #dbeafe; color: #1e40af; }
+.pill-teal  { background: #ccfbf1; color: #0f766e; }
+
+/* ── DASHBOARD MOCKUP ── */
+.dashboard-note { max-width: 1200px; margin: 14px auto 0; background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 10px; padding: 16px 22px; display: flex; align-items: flex-start; gap: 16px; }
+.dn-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.dn-title { font-size: 12px; font-weight: 700; color: #1e3a8a; margin-bottom: 6px; }
+.dn-body { font-size: 11px; color: #1d4ed8; line-height: 1.6; }
+.dn-cards { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.dn-card { background: #fff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #1e3a8a; flex: 1; min-width: 120px; }
+.dn-card strong { display: block; font-size: 12px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<h1>KI Analyse Plattform</h1>
+<p class="meta">Systemarchitektur v2 · Multi-Domain · Claude Sonnet 4.6 · April 2026</p>
+
+<!-- ── DASHBOARD NOTE ── -->
+<div class="dashboard-note">
+  <div class="dn-icon">🗂️</div>
+  <div>
+    <div class="dn-title">Dashboard — Zentraler Einstiegspunkt</div>
+    <div class="dn-body">Nach dem Login landet der User auf dem Project-Dashboard. Dort sind <strong>alle Projekte als Karten</strong> dargestellt — mit Domain-Badge, Status, letzter Aktivität und Team. Von hier aus gelangt man in ein bestehendes Board oder legt ein neues Projekt an (mit Domain-Auswahl).</div>
+    <div class="dn-cards">
+      <div class="dn-card"><strong>🏗️ Bauprojekt Musterweg</strong>Bau · 3 Pläne · ⚠ 2 offen</div>
+      <div class="dn-card"><strong>⚙️ Anlage Halle B</strong>Industrie · 1 Plan · ✓ OK</div>
+      <div class="dn-card"><strong>🔧 Maschinendoku XY</strong>Maschinenbau · Entwurf</div>
+      <div class="dn-card" style="border-style:dashed; color:#94a3b8; background:#f8fafc;"><strong>+ Neues Projekt</strong>Domain wählen & anlegen</div>
+    </div>
+  </div>
+</div>
+
+<div class="canvas" style="margin-top:20px;">
+
+  <!-- ═══ USER ═══ -->
+  <div class="layer l-user">
+    <div class="lbl">User</div>
+    <div class="lcontent">
+      <div class="stitle">Nutzerrollen — domainübergreifend</div>
+      <div class="row">
+        <div class="box bx-slate">
+          <div class="box-tag">Planer / Ingenieur</div>
+          <div class="box-title">Projekt-Owner</div>
+          <div class="box-sub">Projekt anlegen (Domain wählen)<br>Pläne / Dokumente hochladen<br>Analyse lesen & chatten</div>
+        </div>
+        <div class="box bx-slate">
+          <div class="box-tag">Prüfer / Behörde</div>
+          <div class="box-title">Read-only Zugang</div>
+          <div class="box-sub">Board einsehen<br>Analyse-Report exportieren<br>Kommentieren</div>
+        </div>
+        <div class="box bx-slate">
+          <div class="box-tag">Admin</div>
+          <div class="box-title">Normen / Standards</div>
+          <div class="box-sub">Normen & Vorschriften pflegen<br>Domain-Konfiguration<br>Org-Management</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <div class="conn-line"></div>
+    <div class="conn-label">HTTPS · Auth Token (JWT)</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ═══ FRONTEND ═══ -->
+  <div class="layer l-front">
+    <div class="lbl">Frontend</div>
+    <div class="lcontent">
+      <div class="stitle">Next.js 14 · App Router · Tailwind CSS <span class="badge badge-green">Vercel Edge</span></div>
+      <div class="row">
+
+        <div class="box bx-indigo box-highlight">
+          <div class="box-tag">Dashboard</div>
+          <div class="box-title">Projekt-Übersicht</div>
+          <div class="box-sub">Alle Projekte als Karten<br>Domain-Badge · Status<br>Neues Projekt anlegen</div>
+          <div class="box-detail">→ Einstieg in jedes Board</div>
+        </div>
+
+        <div class="box bx-blue">
+          <div class="box-tag">Teil 1</div>
+          <div class="box-title">Standort & Standards</div>
+          <div class="box-sub">Standort / Region wählen<br>Standards-Recherche<br>Ergebnis reviewen & speichern</div>
+          <div class="box-detail">Bau: Kanton/Gemeinde · Industrie: Branche/Norm</div>
+        </div>
+
+        <div class="box bx-blue">
+          <div class="box-tag">Teil 2</div>
+          <div class="box-title">Dokument-Analyse</div>
+          <div class="box-sub">PDF Drag & Drop Upload<br>Seitenweise ✓ / ✗ / ⚠ View<br>Verbesserungsvorschläge</div>
+          <div class="box-detail">Pläne, Zeichnungen, Spezifikationen</div>
+        </div>
+
+        <div class="box bx-blue">
+          <div class="box-tag">Teil 3</div>
+          <div class="box-title">KI Chat</div>
+          <div class="box-sub">Projektkontext-aware<br>Streaming Antworten<br>Verlauf persistiert</div>
+        </div>
+
+        <div class="box bx-blue">
+          <div class="box-tag">Teil 4</div>
+          <div class="box-title">Standards-Datenbank</div>
+          <div class="box-sub">Suche nach Norm / Region<br>Norm-Detail & Quelle<br>Admin: Upload & Index</div>
+          <div class="box-detail">Nach Domain gefiltert</div>
+        </div>
+
+      </div>
+      <div class="idivider"></div>
+      <div class="row">
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Auth</div>
+          <div class="box-sub">Supabase Auth SDK<br>SSR Session</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">State</div>
+          <div class="box-sub">Zustand / React Query<br>Optimistic Updates</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">PDF Viewer</div>
+          <div class="box-sub">react-pdf<br>Annotation Layer</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Export</div>
+          <div class="box-sub">PDF Report<br>XLSX Mängelliste</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Domain Selector</div>
+          <div class="box-sub">Bei Projekterstellung<br>Domain + Subkategorie</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <div class="conn-line"></div>
+    <div class="conn-label">REST API + SSE Streaming</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ═══ BACKEND / API ═══ -->
+  <div class="layer l-api">
+    <div class="lbl">API</div>
+    <div class="lcontent">
+      <div class="stitle">FastAPI (Python 3.12) · Async · Docker <span class="badge badge-green">Railway</span></div>
+      <div class="row">
+        <div class="box bx-cyan">
+          <div class="box-tag">Auth</div>
+          <div class="box-title">Auth Middleware</div>
+          <div class="box-sub">JWT Validation<br>Row Level Security<br>Project ACL</div>
+        </div>
+        <div class="box bx-cyan">
+          <div class="box-tag">Service</div>
+          <div class="box-title">Standards-Service</div>
+          <div class="box-sub">Standort / Branche → Normen<br>Chunking & Embedding<br>pgvector indexieren</div>
+          <div class="box-detail">Domain-agnostisch</div>
+        </div>
+        <div class="box bx-cyan">
+          <div class="box-tag">Service</div>
+          <div class="box-title">Analyse-Service</div>
+          <div class="box-sub">PDF → Seiten-Bilder<br>RAG: Normen abrufen<br>Claude aufrufen → JSON</div>
+          <div class="box-detail">Nutzt Domain-Prompt-Templates</div>
+        </div>
+        <div class="box bx-cyan">
+          <div class="box-tag">Service</div>
+          <div class="box-title">Chat Service</div>
+          <div class="box-sub">History aufbauen<br>Kontext injizieren<br>SSE Streaming</div>
+        </div>
+        <div class="box bx-cyan">
+          <div class="box-tag">Service</div>
+          <div class="box-title">Project Service</div>
+          <div class="box-sub">Board CRUD<br>Dashboard Aggregation<br>Team Management</div>
+        </div>
+        <div class="box bx-cyan">
+          <div class="box-tag">Service</div>
+          <div class="box-title">Export Service</div>
+          <div class="box-sub">PDF Report generieren<br>XLSX Mängelliste<br>Signierter Download-Link</div>
+        </div>
+      </div>
+      <div class="idivider"></div>
+      <div class="row">
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Queue</div>
+          <div class="box-sub">Redis / Celery<br>Async Analyse-Jobs</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Rate Limiter</div>
+          <div class="box-sub">Per User & Org<br>Token Budget Guard</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Logging</div>
+          <div class="box-sub">Structured JSON<br>Cost per Request</div>
+        </div>
+        <div class="box bx-slate" style="flex:0 0 auto; min-width:0;">
+          <div class="box-title" style="font-size:11px;">Webhooks</div>
+          <div class="box-sub">Batch API Callbacks<br>Analyse fertig → Notify</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <div class="conn-line"></div>
+    <div class="conn-label">Domain Plugin Interface — austauschbare Prompt-Templates & Norm-Sets</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ═══ DOMAIN LAYER (NEU) ═══ -->
+  <div class="layer l-domain">
+    <div class="lbl">Domains</div>
+    <div class="lcontent">
+      <div class="stitle">Domain Plugin System <span class="badge badge-teal">Erweiterbar</span> — jede Domain bringt eigene Prompt-Templates, Norm-Sets & Prüfregeln mit</div>
+      <div class="row">
+
+        <div class="box bx-teal box-highlight">
+          <div class="box-tag">✓ Aktiv · v1</div>
+          <div class="box-title">🏗️ Bau / Architektur</div>
+          <div class="box-sub">CH/AT/DE Baunormen<br>Kantonale Zonenreglemente<br>SIA-Normen, RBG/RBV</div>
+          <div class="box-detail">Prompt-Template: Grundriss-Analyse, Massketten, Abstandsregeln</div>
+          <div class="domain-pills">
+            <span class="dp dp-active">Schweiz</span>
+            <span class="dp dp-active">Österreich</span>
+            <span class="dp dp-future">Deutschland</span>
+          </div>
+        </div>
+
+        <div class="box bx-slate">
+          <div class="box-tag">Roadmap</div>
+          <div class="box-title">⚙️ Industrie</div>
+          <div class="box-sub">ISO, EN, DIN Normen<br>Anlagen- & Prozessplanung<br>ATEX, CE-Konformität</div>
+          <div class="box-detail">Prompt-Template: P&ID-Analyse, Sicherheitsabstände</div>
+          <div class="domain-pills">
+            <span class="dp dp-future">Geplant</span>
+          </div>
+        </div>
+
+        <div class="box bx-slate">
+          <div class="box-tag">Roadmap</div>
+          <div class="box-title">🔧 Maschinenbau</div>
+          <div class="box-sub">Maschinenrichtlinie 2006/42<br>Toleranz- & Passungsanalyse<br>Werkstoffspezifikationen</div>
+          <div class="box-detail">Prompt-Template: Technische Zeichnungen, Stücklisten</div>
+          <div class="domain-pills">
+            <span class="dp dp-future">Geplant</span>
+          </div>
+        </div>
+
+        <div class="box bx-slate">
+          <div class="box-tag">Roadmap</div>
+          <div class="box-title">⚡ Elektro / HLKS</div>
+          <div class="box-sub">NIN, SWKI-Normen<br>Schemaprüfung<br>Leitungsdimensionierung</div>
+          <div class="box-detail">Prompt-Template: Schaltpläne, Strangschemas</div>
+          <div class="domain-pills">
+            <span class="dp dp-future">Geplant</span>
+          </div>
+        </div>
+
+        <div class="box bx-slate" style="border-style:dashed; opacity:0.6; flex:0 1 120px; min-width:100px;">
+          <div class="box-tag">Custom</div>
+          <div class="box-title">+ Neue Domain</div>
+          <div class="box-sub">Norm-Set hochladen<br>Prompt-Template<br>konfigurieren</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <div class="conn-line"></div>
+    <div class="conn-label">Anthropic SDK (Python) · TLS</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ═══ AI ═══ -->
+  <div class="layer l-ai">
+    <div class="lbl">KI</div>
+    <div class="lcontent">
+      <div class="stitle">Anthropic Claude API</div>
+      <div class="row">
+        <div class="box bx-purple">
+          <div class="box-tag">Hauptmodell</div>
+          <div class="box-title">Claude Sonnet 4.6</div>
+          <div class="box-sub">Vision + Text<br>1M Token Kontext<br>$3 Input / $15 Output / MTok</div>
+          <div class="box-detail">Analyse, Chat, Normen-Recherche</div>
+        </div>
+        <div class="box bx-purple">
+          <div class="box-tag">Tool</div>
+          <div class="box-title">Web Search Tool</div>
+          <div class="box-sub">Aktuelle Normen<br>online recherchieren<br>nach Region / Branche</div>
+          <div class="box-detail">Teil 1: Standards-Recherche</div>
+        </div>
+        <div class="box bx-purple">
+          <div class="box-tag">Optimierung</div>
+          <div class="box-title">Prompt Caching</div>
+          <div class="box-sub">System-Prompt +<br>Normen-Kontext gecacht<br>−90% Input-Kosten</div>
+          <div class="box-detail">5-min TTL · automatisch</div>
+        </div>
+        <div class="box bx-purple">
+          <div class="box-tag">Optimierung</div>
+          <div class="box-title">Batch API</div>
+          <div class="box-sub">Massen-Analysen<br>asynchron verarbeiten<br>−50% Gesamtkosten</div>
+          <div class="box-detail">Nicht-zeitkritische Jobs</div>
+        </div>
+        <div class="box bx-purple">
+          <div class="box-tag">RAG</div>
+          <div class="box-title">Embedding Pipeline</div>
+          <div class="box-sub">Normen chunken<br>Vektoren erstellen<br>Semantisch suchen</div>
+          <div class="box-detail">OpenAI ada-002 oder lokal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <div class="conn-line"></div>
+    <div class="conn-label">Supabase Client · pgvector queries · S3 SDK</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ═══ DATA ═══ -->
+  <div class="layer l-data">
+    <div class="lbl">Daten</div>
+    <div class="lcontent">
+      <div class="stitle">Supabase (PostgreSQL + pgvector + Storage + Auth) <span class="badge badge-green">EU-West Region</span></div>
+      <div class="row">
+        <div class="box bx-amber">
+          <div class="box-tag">Primary DB</div>
+          <div class="box-title">PostgreSQL 16</div>
+          <div class="box-sub">Users · Orgs · Projects<br>Documents · Analyses<br>Chat-History · Standards</div>
+          <div class="box-detail">domain-Feld in projects & norms</div>
+        </div>
+        <div class="box bx-amber">
+          <div class="box-tag">Vector DB</div>
+          <div class="box-title">pgvector</div>
+          <div class="box-sub">Normen-Embeddings<br>Semantic Similarity<br>RAG Retrieval</div>
+          <div class="box-detail">Gefiltert nach domain</div>
+        </div>
+        <div class="box bx-orange">
+          <div class="box-tag">File Store</div>
+          <div class="box-title">Supabase Storage</div>
+          <div class="box-sub">PDFs / Zeichnungen<br>Seiten-Bilder (Analyse)<br>Exportierte Reports</div>
+        </div>
+        <div class="box bx-amber">
+          <div class="box-tag">Auth</div>
+          <div class="box-title">Supabase Auth</div>
+          <div class="box-sub">Email / OAuth<br>Row Level Security<br>Org-basierte Rollen</div>
+        </div>
+        <div class="box bx-orange">
+          <div class="box-tag">Cache</div>
+          <div class="box-title">Redis</div>
+          <div class="box-sub">Session Cache<br>Job Queue (Celery)<br>Rate Limit Counters</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">
+    <div class="conn-line"></div>
+    <div class="conn-label">Deployment · CI/CD · Monitoring</div>
+    <div class="conn-line"></div>
+  </div>
+
+  <!-- ═══ INFRA ═══ -->
+  <div class="layer l-infra">
+    <div class="lbl">Infra</div>
+    <div class="lcontent">
+      <div class="stitle">Hosting · CI/CD · Observability</div>
+      <div class="row">
+        <div class="box bx-slate">
+          <div class="box-tag">Frontend</div>
+          <div class="box-title">Vercel</div>
+          <div class="box-sub">Edge Network<br>Preview Deployments<br>GitHub Auto-Deploy</div>
+        </div>
+        <div class="box bx-slate">
+          <div class="box-tag">Backend</div>
+          <div class="box-title">Railway</div>
+          <div class="box-sub">Docker Container<br>Auto-Scaling<br>Private Network</div>
+        </div>
+        <div class="box bx-slate">
+          <div class="box-tag">Datenbank</div>
+          <div class="box-title">Supabase Cloud</div>
+          <div class="box-sub">Managed Postgres<br>Daily Backups<br>EU-West (Frankfurt)</div>
+        </div>
+        <div class="box bx-slate">
+          <div class="box-tag">CI/CD</div>
+          <div class="box-title">GitHub Actions</div>
+          <div class="box-sub">Test → Build → Deploy<br>Migrations automatisch<br>Secrets via Vault</div>
+        </div>
+        <div class="box bx-slate">
+          <div class="box-tag">Monitoring</div>
+          <div class="box-title">Sentry + Posthog</div>
+          <div class="box-sub">Error Tracking<br>User Analytics<br>Claude Cost Tracking</div>
+        </div>
+        <div class="box bx-green">
+          <div class="box-tag">Datenschutz</div>
+          <div class="box-title">DSGVO konform</div>
+          <div class="box-sub">Daten in EU/CH<br>Anthropic: Zero Retention<br>Supabase SOC 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── DATENFLUSS ── -->
+<div class="flowbar">
+  <h2>Datenfluss — Dokument-Analyse (Teil 2) · domain-agnostisch</h2>
+  <div class="flow-steps">
+    <span class="fs fs-blue">① User lädt PDF hoch (im Projekt-Board)</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-cyan">② Backend: PDF → Seiten-Bilder</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-teal">③ Domain Plugin: Prompt-Template laden</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-cyan">④ RAG: Normen (domain-gefiltert) aus pgvector</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-purple">⑤ Claude Sonnet 4.6 (Vision + Normen + Template)</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-cyan">⑥ JSON strukturieren & in DB speichern</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-blue">⑦ Board zeigt ✓ / ✗ / ⚠ + Vorschläge</span>
+  </div>
+  <div style="margin-top:14px; border-top:1px solid #f0efe9; padding-top:12px;">
+  <h2 style="margin-bottom:10px;">Datenfluss — Normen-Recherche (Teil 1)</h2>
+  <div class="flow-steps">
+    <span class="fs fs-blue">① User wählt Region / Branche</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-teal">② Domain Plugin: Suchparameter</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-purple">③ Claude + Web Search Tool</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-cyan">④ Normen chunken & embedden</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-amber">⑤ pgvector indexieren (mit domain-Tag)</span>
+    <span class="arrow-s">→</span>
+    <span class="fs fs-blue">⑥ Standards-DB im Board anzeigen</span>
+  </div>
+  </div>
+</div>
+
+<!-- ── SCHEMA ── -->
+<div class="schema">
+  <h2>Datenbankschema (Kern-Tabellen) — v2 mit domain-Feld</h2>
+  <div class="schema-grid">
+    <div class="st bx-amber">
+      <div class="st-name" style="color:#78350f;">organizations</div>
+      <div class="st-fields" style="color:#92400e;">id (uuid)<br>name<br>plan_tier<br>created_at</div>
+    </div>
+    <div class="st bx-slate">
+      <div class="st-name" style="color:#1e293b;">users</div>
+      <div class="st-fields" style="color:#475569;">id (uuid)<br>org_id → orgs<br>role (owner/member/admin)<br>email</div>
+    </div>
+    <div class="st bx-indigo">
+      <div class="st-name" style="color:#1e1b4b;">projects</div>
+      <div class="st-fields" style="color:#3730a3;">id (uuid)<br>org_id, name<br><strong>domain</strong> (bau/industrie/...)<br>location, status<br>created_at</div>
+    </div>
+    <div class="st bx-blue">
+      <div class="st-name" style="color:#1e3a8a;">documents</div>
+      <div class="st-fields" style="color:#1d4ed8;">id (uuid)<br>project_id<br>file_url (Storage)<br>doc_type, pages<br>uploaded_at</div>
+    </div>
+    <div class="st bx-cyan">
+      <div class="st-name" style="color:#164e63;">analyses</div>
+      <div class="st-fields" style="color:#0e7490;">id (uuid)<br>document_id<br>result_json<br>status, cost_usd<br>created_at</div>
+    </div>
+    <div class="st bx-teal">
+      <div class="st-name" style="color:#134e4a;">standards (norms)</div>
+      <div class="st-fields" style="color:#0f766e;">id (uuid)<br><strong>domain</strong> (bau/industrie/...)<br>region, category<br>text, source_url<br>embedding (vector 1536)<br>valid_from</div>
+    </div>
+    <div class="st bx-purple">
+      <div class="st-name" style="color:#3b0764;">chat_messages</div>
+      <div class="st-fields" style="color:#5b21b6;">id (uuid)<br>project_id<br>role (user/assistant)<br>content, created_at</div>
+    </div>
+    <div class="st bx-green">
+      <div class="st-name" style="color:#14532d;">analysis_items</div>
+      <div class="st-fields" style="color:#166534;">id (uuid)<br>analysis_id<br>standard_id<br>status (ok/fail/warn)<br>note, suggestion</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── KOSTEN ── -->
+<div class="costtable">
+  <h2>Kostenschätzung API (Claude Sonnet 4.6)</h2>
+  <table>
+    <tr>
+      <th>Szenario</th>
+      <th>Tokens (ca.)</th>
+      <th>Standard</th>
+      <th>Mit Caching</th>
+      <th>Batch + Caching</th>
+    </tr>
+    <tr>
+      <td>Dokument-Analyse (10 Seiten)</td>
+      <td>~20'000 Input / 3'000 Output</td>
+      <td>~$0.10</td>
+      <td>~$0.04 <span class="pill pill-green">−60%</span></td>
+      <td>~$0.02 <span class="pill pill-green">−80%</span></td>
+    </tr>
+    <tr>
+      <td>Standards-Recherche (Teil 1)</td>
+      <td>~8'000 Input / 4'000 Output</td>
+      <td>~$0.08</td>
+      <td>~$0.05</td>
+      <td>~$0.04</td>
+    </tr>
+    <tr>
+      <td>Chat (pro Nachricht)</td>
+      <td>~5'000 Input / 1'000 Output</td>
+      <td>~$0.03</td>
+      <td>~$0.01 <span class="pill pill-green">gecacht</span></td>
+      <td>—</td>
+    </tr>
+    <tr style="background:#f9f9f7; font-weight:600;">
+      <td>100 Projekte / Monat</td>
+      <td>—</td>
+      <td>~$20–30</td>
+      <td>~$8–12</td>
+      <td>~$4–6 <span class="pill pill-blue">empfohlen</span></td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
