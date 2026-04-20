@@ -141,7 +141,7 @@ export default function StandardsPage() {
     setStandards((prev) => prev.filter((s) => !ids.includes(s.id)));
   }
 
-  const categories = [...new Set(standards.map((s) => s.category))].sort();
+  const categories = Array.from(new Set(standards.map((s) => s.category))).sort();
 
   // Gruppiere nach Datei (source_url + region + category)
   const fileEntries: FileEntry[] = [];
