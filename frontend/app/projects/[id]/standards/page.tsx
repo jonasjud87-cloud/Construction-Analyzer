@@ -37,7 +37,7 @@ export default function StandardsPage({ params }: { params: { id: string } }) {
     load();
   }, [params.id]);
 
-  const categories = [...new Set(standards.map((s) => s.category))].sort();
+  const categories = Array.from(new Set(standards.map((s) => s.category))).sort();
 
   const filtered = filterCategory
     ? standards.filter((s) => s.category === filterCategory)
