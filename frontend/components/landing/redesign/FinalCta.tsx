@@ -19,43 +19,11 @@ export default function FinalCta() {
         overflow: "hidden",
       }}
     >
-      {/* dark backing only where the headline sits, dissolving toward the bottom */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          background:
-            "linear-gradient(to bottom, transparent 0%, transparent 6%, rgba(10,20,32,0.96) 30%, rgba(10,20,32,0.82) 50%, transparent 88%)",
-        }}
-      />
-
-      {/* the bottom of the page glows with the same cyan/blue as the hero,
-          instead of flat navy — kept in the blue family so it matches the rest */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-          background:
-            "radial-gradient(95% 72% at 50% 110%, rgba(79,209,255,0.13) 0%, rgba(56,189,248,0.09) 38%, rgba(40,98,215,0.05) 62%, transparent 80%)",
-        }}
-      />
-
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
-          maskImage: "linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%)",
-        }}
-      >
-        <HeroParticles opacity={0.6} />
+      {/* No own background — transparent like every other section, so the
+          page canvas + ambient light carry straight through. Just the same
+          particle ring as the hero. */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <HeroParticles opacity={0.7} />
       </div>
 
       <motion.div
