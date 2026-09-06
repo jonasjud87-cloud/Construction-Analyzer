@@ -210,38 +210,8 @@ export default function ShowcasePlanCheck({ onOpenNorm }: { onOpenNorm: (id: str
               )}
             </AnimatePresence>
 
-            {/* pins */}
-            {visible.map((f, i) => {
-              const active = hovered === f.id || expanded === f.id;
-              return (
-                <motion.button
-                  key={`${f.id}-${scanKey}`}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.32, ease: EASE_OUT, delay: scanning ? 0.9 + i * 0.06 : i * 0.04 }}
-                  onMouseEnter={() => setHovered(f.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onFocus={() => setHovered(f.id)}
-                  onBlur={() => setHovered(null)}
-                  onClick={() => setExpanded((e) => (e === f.id ? null : f.id))}
-                  aria-label={`${SEV[f.severity].label}: ${f.title}`}
-                  style={{
-                    position: "absolute",
-                    left: `${f.x}%`,
-                    top: `${f.y}%`,
-                    transform: "translate(-50%,-50%)",
-                    width: active ? 20 : 14,
-                    height: active ? 20 : 14,
-                    borderRadius: "var(--tb-r-pill)",
-                    border: `2px solid ${SEV[f.severity].color}`,
-                    background: active ? SEV[f.severity].color : SEV[f.severity].bg,
-                    cursor: "pointer",
-                    transition: "width .16s, height .16s, background .16s",
-                    padding: 0,
-                  }}
-                />
-              );
-            })}
+            {/* Fund-Marker auf dem Plan folgen, sobald die Verortung steht —
+                bis dahin zeigt der Prüfbericht rechts, was gefunden wurde und wo. */}
           </div>
         </div>
 

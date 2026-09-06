@@ -93,9 +93,9 @@ export default function Hero() {
             margin: "26px auto 0",
           }}
         >
-          Pläne als PDF hochladen, KI-Prüfung gegen geltende Normen, eine klare
-          Übersicht der Befunde — was passt, was kritisch ist, was Sie prüfen
-          sollten. Ändern und freigeben bleibt bei Ihrem Team.
+          TraceBuild liest Ihre Zeichnungen, gleicht sie mit geltenden Normen und
+          Vorschriften ab und zeigt jede Abweichung — klar dargestellt und
+          nachvollziehbar belegt.
         </motion.p>
 
         <motion.div
