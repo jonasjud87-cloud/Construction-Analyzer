@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import PruefrasterField from "./PruefrasterField";
+import HeroParticles from "./HeroParticles";
 import { GradientButton, GhostButton } from "./primitives";
 import { EASE_OUT, EASE_EXPO, inView } from "@/lib/landing/motion";
 
@@ -17,11 +17,30 @@ export default function FinalCta() {
         textAlign: "center",
         padding: "var(--tb-section-y) var(--tb-gutter)",
         overflow: "hidden",
-        background: "var(--tb-canvas)",
       }}
     >
-      <div style={{ position: "absolute", inset: 0, opacity: 0.5 }}>
-        <PruefrasterField dim />
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          background:
+            "linear-gradient(to bottom, transparent 0%, transparent 6%, var(--tb-canvas-solid) 42%, var(--tb-canvas-solid) 100%)",
+        }}
+      />
+
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          maskImage: "linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%)",
+        }}
+      >
+        <HeroParticles opacity={0.6} />
       </div>
 
       <motion.div

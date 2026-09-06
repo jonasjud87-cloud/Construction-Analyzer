@@ -113,20 +113,6 @@ export default function Hero() {
           <GradientButton href="#kontakt">Loslegen →</GradientButton>
           <GhostButton href="#produkt">Produktvorschau</GhostButton>
         </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.9 }}
-          style={{
-            fontSize: 13,
-            letterSpacing: "0.01em",
-            color: "var(--tb-text-tertiary)",
-            marginTop: 22,
-          }}
-        >
-          Daten in der Schweiz gehostet · DSG-konform · persönliche Ansprechperson
-        </motion.p>
       </motion.div>
 
       {/* scroll cue — motion stilled automatically under reduced-motion */}
