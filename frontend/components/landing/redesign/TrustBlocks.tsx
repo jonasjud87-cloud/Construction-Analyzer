@@ -120,13 +120,25 @@ const BLOCKS = [
   },
   {
     visual: <DocStack />,
-    h: "TraceBuild prüft. Sie entscheiden.",
+    h: (
+      <>
+        TraceBuild prüft.
+        <br />
+        Sie entscheiden.
+      </>
+    ),
     p: "Die KI liefert eine übersichtliche Auswertung — sortiert, verortet, einfach zu interpretieren. Die Zeichnung ändern und die Freigabe erteilen bleibt bei Ihrem Team. Menschenverstand ist hier nicht ersetzbar.",
     proof: "Kein Eingriff in den Plan · Freigabe durch Ihr Team",
   },
   {
     visual: <Timeline />,
-    h: "Ändert sich was, sagen wir Bescheid.",
+    h: (
+      <>
+        Ändert sich was,
+        <br />
+        sagen wir Bescheid.
+      </>
+    ),
     p: "Wir behalten Normen und Vorschriften im Blick, damit Sie es nicht müssen. Wird für Ihr Projekt etwas relevant, hören Sie von uns — bevor es zum Problem wird.",
     proof: "Wir schauen hin · Sie bekommen Bescheid",
   },
@@ -161,7 +173,9 @@ export default function TrustBlocks() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 48px", maxWidth: 620 }}
         >
-          Unser Anspruch an jede Prüfung.
+          Unser Anspruch an
+          <br />
+          jede Prüfung.
         </motion.h2>
 
         <div
@@ -196,7 +210,7 @@ export default function TrustBlocks() {
           >
             {BLOCKS.map((b) => (
               <motion.article
-                key={b.h}
+                key={b.proof}
                 variants={cardV}
                 className="tb-trust-card"
                 style={{
