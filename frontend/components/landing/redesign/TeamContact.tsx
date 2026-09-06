@@ -61,7 +61,7 @@ const FOUNDERS = [
     name: "Jonas Jud",
     role: "Mitgründer",
     email: "jonas@tracebuild.ch",
-    blurb: "Hat TraceBuild zusammen mit Livio aufgebaut — von der ersten Idee an.",
+    blurb: "Hat TraceBuild zusammen mit Livio aufgebaut — von der ersten Idee an.",
   },
   {
     initials: "LT",
@@ -84,7 +84,7 @@ export default function TeamContact() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 14px", maxWidth: 620 }}
         >
-          Wer wir sind.
+          Über uns.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -152,7 +152,9 @@ export default function TeamContact() {
                 <h3 style={{ fontSize: "clamp(22px,2.4vw,32px)", margin: 0 }}>{f.name}</h3>
                 <p style={{ margin: "6px 0 20px", fontSize: 13.5, color: "var(--tb-text-tertiary)" }}>{f.role}</p>
                 <p style={{ margin: 0, fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.6, color: "var(--tb-text-secondary)", maxWidth: 480 }}>
-                  {f.blurb}
+                  {f.blurb.split(" — ")[0]} —
+                  <br />
+                  {f.blurb.split(" — ")[1]}
                 </p>
                 <a
                   href={`mailto:${f.email}`}

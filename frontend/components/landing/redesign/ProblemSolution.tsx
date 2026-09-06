@@ -17,14 +17,14 @@ type Beat = {
 const BEATS: Beat[] = [
   {
     eyebrow: "Das Problem",
-    eyebrowColor: "var(--tb-danger-bright)",
+    eyebrowColor: "var(--tb-lavender)",
     headline: "Ein übersehener Grenzabstand kostet Wochen.",
     lines: [
       "Normen ändern sich. Kantonal. Ständig.",
       "Die Prüfung passiert im Kopf — oder gar nicht.",
       "Fehler fallen erst spät auf.",
     ],
-    tick: "var(--tb-danger-bright)",
+    tick: "var(--tb-lavender)",
     body: "var(--tb-text-bright)",
   },
   {
