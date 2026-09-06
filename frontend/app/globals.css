@@ -342,8 +342,10 @@ h1, h2, h3, h4, h5, h6 {
     animation: none !important;
   }
 
-  /* Intro overlay: no glow drift (JS also swaps slide for an opacity fade) */
-  .tb-intro__glow {
+  /* Intro overlay: no glow drift / no light sweep (JS also swaps slide for an
+     opacity fade, and skips the particle-house phase entirely) */
+  .tb-intro__glow,
+  .tb-intro__sweep {
     animation: none !important;
   }
 }
@@ -361,16 +363,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes tbIntroGlowA {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%       { transform: translate3d(6%, -4%, 0) scale(1.14); }
+  0%, 100% { opacity: 0.13; transform: translate3d(0, 0, 0) scale(1); }
+  50%       { opacity: 0.22; transform: translate3d(10%, -7%, 0) scale(1.24); }
 }
 @keyframes tbIntroGlowB {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
-  50%       { transform: translate3d(-7%, 5%, 0) scale(1.2); }
+  0%, 100% { opacity: 0.10; transform: translate3d(0, 0, 0) scale(1.05); }
+  50%       { opacity: 0.18; transform: translate3d(-11%, 8%, 0) scale(1.28); }
 }
 @keyframes tbIntroGlowC {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%       { transform: translate3d(4%, 6%, 0) scale(1.12); }
+  0%, 100% { opacity: 0.09; transform: translate3d(0, 0, 0) scale(1); }
+  50%       { opacity: 0.17; transform: translate3d(7%, 10%, 0) scale(1.22); }
+}
+
+/* One slow, soft band of light drifting across the panel. transform/opacity
+   only; idle for most of the cycle, a single ~2.4s sweep, then idle again. */
+@keyframes tbIntroSweep {
+  0%, 60%   { opacity: 0; transform: translate3d(-140%, 0, 0) skewX(-14deg); }
+  70%       { opacity: 0.1; }
+  82%, 100% { opacity: 0; transform: translate3d(170%, 0, 0) skewX(-14deg); }
 }
 
 /* No-JS / pre-hydration fallback: leave the viewport and stop intercepting
@@ -412,21 +422,58 @@ h1, h2, h3, h4, h5, h6 {
   left: -16vmax; top: -20vmax;
   opacity: 0.16;
   background: radial-gradient(circle, var(--tb-accent-cyan) 0%, transparent 70%);
-  animation: tbIntroGlowA 22s ease-in-out infinite;
+  animation: tbIntroGlowA 18s ease-in-out -4s infinite;
 }
 .tb-intro__glow--b {
   width: 58vmax; height: 58vmax;
   right: -18vmax; top: 8vmax;
   opacity: 0.13;
   background: radial-gradient(circle, var(--tb-info) 0%, transparent 70%);
-  animation: tbIntroGlowB 26s ease-in-out infinite;
+  animation: tbIntroGlowB 21s ease-in-out -11s infinite;
 }
 .tb-intro__glow--c {
   width: 52vmax; height: 52vmax;
   left: 18vmax; bottom: -24vmax;
   opacity: 0.12;
   background: radial-gradient(circle, var(--tb-lavender) 0%, transparent 70%);
-  animation: tbIntroGlowC 30s ease-in-out infinite;
+  animation: tbIntroGlowC 24s ease-in-out -7s infinite;
+}
+
+.tb-intro__sweep {
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 42%;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: blur(16px);
+  will-change: transform, opacity;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    var(--tb-info) 45%,
+    var(--tb-accent-cyan) 55%,
+    transparent 100%
+  );
+  animation: tbIntroSweep 13s ease-in-out 2.5s infinite;
+}
+
+.tb-intro__house {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: min(70vw, 70vh, 460px);
+  height: min(70vw, 70vh, 460px);
+  pointer-events: none;
+}
+.tb-intro__house-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .tb-intro__stack {
@@ -437,6 +484,11 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 1.1rem;
   padding: 1.5rem;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.tb-intro__stack--out {
+  opacity: 0;
+  transform: scale(0.9);
 }
 .tb-intro__logo {
   height: clamp(96px, 18vw, 180px);

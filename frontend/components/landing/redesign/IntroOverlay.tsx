@@ -3,10 +3,22 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
+import IntroHouse from "./IntroHouse";
 
 const SEEN_KEY = "tb-intro-seen";
 const slideEase: [number, number, number, number] = [0.7, 0, 0.2, 1];
 const useIsoEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/* Phase timeline (non-reduced):
+   A  0 → 1600ms   logo + wordmark fade/scale in, sit
+   B  1600 → ~2050 logo + wordmark fade/scale out (0.45s)
+   C  2100 → 4000  particle house assembles (~1.4s) then holds (~0.5s)
+   D  4000ms       overlay slides up, unmounts on animation complete
+   Reduced motion: hold 1300ms, 300ms opacity fade, unmount — no B, no C. */
+const PHASE_B_MS = 1600;
+const PHASE_C_MS = 2100;
+const PHASE_D_MS = 4000;
+const REDUCED_HOLD_MS = 1300;
 
 export default function IntroOverlay() {
   const prefersReduced = useReducedMotion();
@@ -15,6 +27,8 @@ export default function IntroOverlay() {
   const [inDom, setInDom] = useState(true);
   const [leaving, setLeaving] = useState(false);
   const [skipped, setSkipped] = useState(false);
+  const [logoOut, setLogoOut] = useState(false);
+  const [showHouse, setShowHouse] = useState(false);
 
   useIsoEffect(() => {
     let seen = false;
@@ -38,11 +52,20 @@ export default function IntroOverlay() {
   }, []);
 
   useEffect(() => {
-    if (skipped) return;
-    const hold = prefersReduced ? 1300 : 2500;
-    const timer = window.setTimeout(() => setLeaving(true), hold);
-    return () => window.clearTimeout(timer);
-  }, [skipped, prefersReduced]);
+    if (skipped || leaving) return;
+    if (prefersReduced) {
+      const t = window.setTimeout(() => setLeaving(true), REDUCED_HOLD_MS);
+      return () => window.clearTimeout(t);
+    }
+    const tB = window.setTimeout(() => setLogoOut(true), PHASE_B_MS);
+    const tC = window.setTimeout(() => setShowHouse(true), PHASE_C_MS);
+    const tD = window.setTimeout(() => setLeaving(true), PHASE_D_MS);
+    return () => {
+      window.clearTimeout(tB);
+      window.clearTimeout(tC);
+      window.clearTimeout(tD);
+    };
+  }, [skipped, leaving, prefersReduced]);
 
   useEffect(() => {
     if (skipped) return;
@@ -90,9 +113,12 @@ export default function IntroOverlay() {
         <span className="tb-intro__glow tb-intro__glow--a" />
         <span className="tb-intro__glow tb-intro__glow--b" />
         <span className="tb-intro__glow tb-intro__glow--c" />
+        <span className="tb-intro__sweep" />
       </div>
 
-      <div className="tb-intro__stack">
+      {!prefersReduced && showHouse && <IntroHouse />}
+
+      <div className={`tb-intro__stack${logoOut ? " tb-intro__stack--out" : ""}`}>
         <Image
           src="/Logo-new.png"
           alt="TraceBuild"
