@@ -19,6 +19,7 @@ export default function FinalCta() {
         overflow: "hidden",
       }}
     >
+      {/* dark backing only where the headline sits, dissolving toward the bottom */}
       <div
         aria-hidden
         style={{
@@ -26,7 +27,20 @@ export default function FinalCta() {
           inset: 0,
           zIndex: 0,
           background:
-            "linear-gradient(to bottom, transparent 0%, transparent 5%, rgba(10,20,32,1) 34%, rgba(10,20,32,1) 62%, transparent 100%)",
+            "linear-gradient(to bottom, transparent 0%, transparent 6%, rgba(10,20,32,0.96) 30%, rgba(10,20,32,0.82) 50%, transparent 88%)",
+        }}
+      />
+
+      {/* the bottom of the page glows with palette light instead of flat navy */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(90% 70% at 50% 108%, rgba(79,209,255,0.2) 0%, rgba(198,155,240,0.13) 34%, rgba(143,179,245,0.07) 56%, transparent 76%)",
         }}
       />
 
