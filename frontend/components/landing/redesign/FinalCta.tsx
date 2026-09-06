@@ -31,7 +31,8 @@ export default function FinalCta() {
         }}
       />
 
-      {/* the bottom of the page glows with palette light instead of flat navy */}
+      {/* the bottom of the page glows with the same cyan/blue as the hero,
+          instead of flat navy — kept in the blue family so it matches the rest */}
       <div
         aria-hidden
         style={{
@@ -40,7 +41,7 @@ export default function FinalCta() {
           zIndex: 0,
           pointerEvents: "none",
           background:
-            "radial-gradient(90% 70% at 50% 108%, rgba(79,209,255,0.2) 0%, rgba(198,155,240,0.13) 34%, rgba(143,179,245,0.07) 56%, transparent 76%)",
+            "radial-gradient(95% 72% at 50% 110%, rgba(79,209,255,0.13) 0%, rgba(56,189,248,0.09) 38%, rgba(40,98,215,0.05) 62%, transparent 80%)",
         }}
       />
 
