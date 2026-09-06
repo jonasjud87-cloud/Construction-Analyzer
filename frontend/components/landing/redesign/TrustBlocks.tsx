@@ -162,7 +162,14 @@ export default function TrustBlocks() {
             overscrollBehaviorX: "contain",
             WebkitOverflowScrolling: "touch",
             scrollSnapType: "x proximity",
-            paddingBottom: 18,
+            scrollPaddingInline: "var(--tb-gutter)",
+            marginInline: "calc(-1 * var(--tb-gutter))",
+            paddingInline: "var(--tb-gutter)",
+            paddingBlock: "6px 20px",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%)",
+            maskImage:
+              "linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%)",
           }}
         >
           <motion.div
@@ -214,11 +221,12 @@ export default function TrustBlocks() {
       </div>
 
       <style>{`
-        .tb-trust-rail { scrollbar-width: thin; scrollbar-color: rgba(133,166,233,0.3) transparent; }
-        .tb-trust-rail::-webkit-scrollbar { height: 8px; }
-        .tb-trust-rail::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
-        .tb-trust-rail::-webkit-scrollbar-thumb { background: rgba(133,166,233,0.3); border-radius: 4px; }
-        .tb-trust-rail::-webkit-scrollbar-thumb:hover { background: rgba(133,166,233,0.5); }
+        .tb-trust-rail { scrollbar-width: thin; scrollbar-color: #38bdf8 rgba(255,255,255,0.05); }
+        .tb-trust-rail::-webkit-scrollbar { height: 6px; }
+        .tb-trust-rail::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+        .tb-trust-rail::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 999px; }
+        .tb-trust-rail::-webkit-scrollbar-thumb { background: linear-gradient(90deg,#4fd1ff,#2862d7); border-radius: 999px; }
+        .tb-trust-rail::-webkit-scrollbar-thumb:hover { background: linear-gradient(90deg,#4fd1ff,#38bdf8); }
         .tb-trust-card:hover {
           border-color: var(--tb-border-strong);
           background: var(--tb-glass-hover);

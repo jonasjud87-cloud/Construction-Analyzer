@@ -11,7 +11,7 @@ const useIsoEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect
 /* Phase timeline (non-reduced):
    A  0 → 1900ms   logo + wordmark fade/scale in, sit
    B  1900 → ~2350 logo + wordmark fade/scale out (0.45s)
-   C  2500 → 7000  particles assemble into "KI Analysen" (~1.9s) then hold (~2.6s)
+   C  2500 → 7000  particles assemble into "KI Software" (~1.9s) then hold (~2.6s)
    D  7000ms       overlay slides up (0.7s), unmounts on animation complete
    Total on screen ≈ 7.7s.
    Reduced motion: hold 1500ms, 300ms opacity fade, unmount — no B, no C. */

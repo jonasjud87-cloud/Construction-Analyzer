@@ -172,7 +172,7 @@ export default function TeamContact() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ marginTop: "clamp(48px,7vw,88px)", fontSize: 15, color: "var(--tb-text-secondary)", lineHeight: 1.7 }}
         >
-          Wir sitzen in Zürich. Schreiben Sie uns direkt:{" "}
+          Wir sitzen in Mels SG. Schreiben Sie uns direkt:{" "}
           <a href="mailto:jonas@tracebuild.ch" style={{ color: "var(--tb-text)" }}>jonas@tracebuild.ch</a>
           {" · "}
           <a href="mailto:livio@tracebuild.ch" style={{ color: "var(--tb-text)" }}>livio@tracebuild.ch</a>
