@@ -84,7 +84,7 @@ export default function TeamContact() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 14px", maxWidth: 620 }}
         >
-          Die zwei hinter TraceBuild.
+          Wer wir sind.
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
