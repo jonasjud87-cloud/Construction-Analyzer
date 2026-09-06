@@ -37,8 +37,10 @@ function buildRing() {
 
 export default function HeroParticles({
   scrollRef,
+  opacity = 1,
 }: {
   scrollRef?: React.MutableRefObject<number>;
+  opacity?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReduced = useReducedMotion();
@@ -148,7 +150,7 @@ export default function HeroParticles({
   }, [prefersReduced, scrollRef]);
 
   return (
-    <div aria-hidden style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+    <div aria-hidden style={{ position: "absolute", inset: 0, overflow: "hidden", opacity }}>
       <canvas
         ref={canvasRef}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}

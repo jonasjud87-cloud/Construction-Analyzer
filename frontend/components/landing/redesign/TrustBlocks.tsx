@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
 import { Eyebrow } from "./primitives";
 import { EASE_OUT, staggerParent, cardReveal, inView } from "@/lib/landing/motion";
 
@@ -129,11 +130,50 @@ const BLOCKS = [
   },
 ];
 
+const fadeOnly: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.4, ease: EASE_OUT } },
+};
+
 export default function TrustBlocks() {
+  const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [maxShift, setMaxShift] = useState(0);
+
+  useEffect(() => {
+    if (reduce) {
+      setMaxShift(0);
+      return;
+    }
+    const measure = () => {
+      const rail = railRef.current;
+      const track = trackRef.current;
+      if (!rail || !track) return;
+      setMaxShift(Math.max(0, track.scrollWidth - rail.clientWidth));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [reduce]);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxShift]);
+
+  const cardV = reduce ? fadeOnly : cardReveal;
+
   return (
-    <section id="vertrauen" style={{ position: "relative", padding: "var(--tb-section-y) var(--tb-gutter)" }}>
+    <section
+      id="vertrauen"
+      ref={sectionRef}
+      style={{ position: "relative", padding: "var(--tb-section-y) var(--tb-gutter)" }}
+    >
       <div style={{ maxWidth: "var(--tb-max)", margin: "0 auto" }}>
-        <Eyebrow>Vertrauen</Eyebrow>
+        <Eyebrow>Qualität</Eyebrow>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -141,56 +181,78 @@ export default function TrustBlocks() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 48px", maxWidth: 620 }}
         >
-          Warum Architekturbüros TraceBuild vertrauen.
+          Unser Anspruch an jede Prüfung.
         </motion.h2>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={inView}
-          variants={staggerParent(0.09)}
-          className="tb-trust-grid"
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(20px,4vw,56px)" }}
+        <div
+          ref={railRef}
+          className="tb-trust-rail"
+          style={{
+            overflowX: "auto",
+            overscrollBehaviorX: "contain",
+            WebkitOverflowScrolling: "touch",
+            scrollSnapType: "x proximity",
+            padding: "16px 4px",
+            margin: "-16px -4px",
+          }}
         >
-          {BLOCKS.map((b) => (
-            <motion.article
-              key={b.h}
-              variants={cardReveal}
-              className="tb-trust-card"
-              style={{
-                borderRadius: "var(--tb-r-container)",
-                border: "1px solid var(--tb-border)",
-                background: "var(--tb-glass)",
-                padding: "clamp(24px,3vw,44px)",
-                display: "flex",
-                flexDirection: "column",
-                gap: 18,
-                transition: "border-color var(--tb-dur-base) var(--tb-ease-out), box-shadow var(--tb-dur-base) var(--tb-ease-out), background var(--tb-dur-base) var(--tb-ease-out)",
-              }}
-            >
-              <div style={{ height: 80 }}>{b.visual}</div>
-              <h3 style={{ fontSize: "clamp(19px,1.8vw,24px)", lineHeight: 1.2, letterSpacing: "-0.02em", margin: 0 }}>
-                {b.h}
-              </h3>
-              <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.65, color: "var(--tb-text-secondary)" }}>
-                {b.p}
-              </p>
-              <p style={{ margin: "auto 0 0", paddingTop: 14, borderTop: "1px solid var(--tb-hairline)", fontSize: 12, letterSpacing: "0.01em", color: "var(--tb-text-tertiary)" }}>
-                {b.proof}
-              </p>
-            </motion.article>
-          ))}
-        </motion.div>
+          <motion.div
+            ref={trackRef}
+            initial="hidden"
+            whileInView="visible"
+            viewport={inView}
+            variants={staggerParent(0.09)}
+            className="tb-trust-track"
+            style={{
+              display: "flex",
+              gap: "clamp(16px,3vw,32px)",
+              width: "max-content",
+              x: reduce ? 0 : x,
+              willChange: reduce ? undefined : "transform",
+            }}
+          >
+            {BLOCKS.map((b) => (
+              <motion.article
+                key={b.h}
+                variants={cardV}
+                className="tb-trust-card"
+                style={{
+                  flex: "0 0 clamp(280px,78vw,400px)",
+                  scrollSnapAlign: "start",
+                  borderRadius: "var(--tb-r-container)",
+                  border: "1px solid var(--tb-border)",
+                  background: "var(--tb-glass)",
+                  padding: "clamp(24px,3vw,44px)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 18,
+                  transition:
+                    "border-color var(--tb-dur-base) var(--tb-ease-out), box-shadow var(--tb-dur-base) var(--tb-ease-out), background var(--tb-dur-base) var(--tb-ease-out)",
+                }}
+              >
+                <div style={{ height: 80 }}>{b.visual}</div>
+                <h3 style={{ fontSize: "clamp(19px,1.8vw,24px)", lineHeight: 1.2, letterSpacing: "-0.02em", margin: 0 }}>
+                  {b.h}
+                </h3>
+                <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.65, color: "var(--tb-text-secondary)" }}>
+                  {b.p}
+                </p>
+                <p style={{ margin: "auto 0 0", paddingTop: 14, borderTop: "1px solid var(--tb-hairline)", fontSize: 12, letterSpacing: "0.01em", color: "var(--tb-text-tertiary)" }}>
+                  {b.proof}
+                </p>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
       </div>
 
       <style>{`
+        .tb-trust-rail { scrollbar-width: none; -ms-overflow-style: none; }
+        .tb-trust-rail::-webkit-scrollbar { width: 0; height: 0; display: none; }
         .tb-trust-card:hover {
           border-color: var(--tb-border-strong);
           background: var(--tb-glass-hover);
           box-shadow: var(--tb-lift);
-        }
-        @media (max-width: 760px) {
-          .tb-trust-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

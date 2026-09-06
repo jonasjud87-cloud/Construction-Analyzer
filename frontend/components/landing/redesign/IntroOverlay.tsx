@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import IntroText from "./IntroText";
 
-const SEEN_KEY = "tb-intro-seen";
 const slideEase: [number, number, number, number] = [0.7, 0, 0.2, 1];
 const useIsoEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
@@ -27,23 +26,12 @@ export default function IntroOverlay() {
   const finished = useRef(false);
   const [inDom, setInDom] = useState(true);
   const [leaving, setLeaving] = useState(false);
-  const [skipped, setSkipped] = useState(false);
+  const [skipped] = useState(false);
   const [logoOut, setLogoOut] = useState(false);
   const [showText, setShowText] = useState(false);
 
+  // Plays on every full page load (incl. Ctrl+R) — no session guard.
   useIsoEffect(() => {
-    let seen = false;
-    try {
-      seen = window.sessionStorage.getItem(SEEN_KEY) === "1";
-    } catch {}
-    if (seen) {
-      setSkipped(true);
-      setInDom(false);
-      return;
-    }
-    try {
-      window.sessionStorage.setItem(SEEN_KEY, "1");
-    } catch {}
     rootRef.current?.classList.add("tb-intro--js");
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";

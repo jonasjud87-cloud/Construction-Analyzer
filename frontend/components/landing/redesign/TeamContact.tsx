@@ -59,16 +59,16 @@ const FOUNDERS = [
   {
     initials: "JJ",
     name: "Jonas Jud",
-    role: "Mitgründer · Produkt & Normen",
+    role: "Mitgründer · lernt Informatiker",
     email: "jonas@tracebuild.ch",
-    blurb: "Kümmert sich ums Produkt und darum, welche Normen und Vorschriften reingehören.",
+    blurb: "Hat TraceBuild zusammen mit Livio aufgebaut — von der ersten Idee an.",
   },
   {
     initials: "LT",
     name: "Livio Thoma",
-    role: "Mitgründer · Technik",
+    role: "Mitgründer · lernt Konstrukteur",
     email: "livio@tracebuild.ch",
-    blurb: "Baut die Technik dahinter — von der Zeichnungserkennung bis zur Auswertung.",
+    blurb: "Hat TraceBuild zusammen mit Jonas aufgebaut — von der ersten Idee an.",
   },
 ];
 
@@ -82,10 +82,20 @@ export default function TeamContact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={inView}
           transition={{ duration: 0.6, ease: EASE_OUT }}
-          style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 48px", maxWidth: 620 }}
+          style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 14px", maxWidth: 620 }}
         >
           Die zwei hinter TraceBuild.
         </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={inView}
+          transition={{ duration: 0.6, ease: EASE_OUT }}
+          style={{ margin: "0 0 48px", fontSize: 15, color: "var(--tb-text-secondary)", maxWidth: 520, lineHeight: 1.6 }}
+        >
+          Gemeinsam aufgebaut, ohne feste Rollenverteilung. Der Unterschied: Livio lernt
+          Konstrukteur, Jonas Informatiker.
+        </motion.p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px,7vw,96px)" }}>
           {FOUNDERS.map((f, i) => (
