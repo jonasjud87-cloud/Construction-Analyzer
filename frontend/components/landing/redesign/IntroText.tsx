@@ -16,7 +16,7 @@ const TEXT = "KI Analysen";
 const SA = [79, 209, 255]; // #4fd1ff
 const SB = [56, 189, 248]; // #38bdf8
 const SC = [40, 98, 215]; // #2862d7
-const ASSEMBLE_MS = 2200;
+const ASSEMBLE_MS = 1900;
 const DESIRED = 1300;
 
 const lp = (a: number, b: number, t: number) => a + (b - a) * t;
