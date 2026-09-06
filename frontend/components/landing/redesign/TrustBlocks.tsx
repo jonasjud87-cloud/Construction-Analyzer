@@ -1,23 +1,31 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Eyebrow } from "./primitives";
 import { EASE_OUT, staggerParent, cardReveal, inView } from "@/lib/landing/motion";
 
 /* ── palette-only micro-visuals ─────────────────────────────────────────── */
 
 function SwissLine() {
+  // Switzerland silhouette from real border waypoints (Geneva point SW,
+  // Basel + Schaffhausen bumps on the north edge, Ticino wedge pointing south,
+  // Val-Müstair poke on the east). Node sits roughly on Bern.
+  const CH =
+    "M11,78 L10,66 L27,41 L54,18 L67,17 L87,8 L105,15 L120,24 L120,49 L141,59 " +
+    "L134,78 L112,74 L100,80 L100,95 L92,81 L68,79 L56,88 L45,90 L37,86 L35,85 " +
+    "L29,70 L16,73 Z";
   return (
-    <svg viewBox="0 0 120 80" width="120" height="80" aria-hidden>
+    <svg viewBox="0 0 150 104" width="112" height="78" aria-hidden>
       <path
-        d="M18 40 L30 26 L42 30 L52 18 L66 22 L74 14 L88 20 L98 34 L104 30 L100 46 L88 52 L92 64 L76 60 L64 68 L52 58 L40 62 L30 54 L20 56 Z"
-        fill="none"
+        d={CH}
+        fill="var(--tb-accent)"
+        fillOpacity="0.06"
         stroke="var(--tb-accent)"
-        strokeWidth="1"
-        strokeOpacity="0.6"
+        strokeWidth="1.6"
+        strokeOpacity="0.7"
+        strokeLinejoin="round"
       />
-      <circle cx="60" cy="42" r="3" fill="var(--tb-accent-cyan)">
+      <circle cx="49" cy="45" r="3.4" fill="var(--tb-accent-cyan)">
         <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite" />
       </circle>
     </svg>
@@ -137,39 +145,11 @@ const fadeOnly: Variants = {
 
 export default function TrustBlocks() {
   const reduce = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [maxShift, setMaxShift] = useState(0);
-
-  useEffect(() => {
-    if (reduce) {
-      setMaxShift(0);
-      return;
-    }
-    const measure = () => {
-      const rail = railRef.current;
-      const track = trackRef.current;
-      if (!rail || !track) return;
-      setMaxShift(Math.max(0, track.scrollWidth - rail.clientWidth));
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [reduce]);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -maxShift]);
-
   const cardV = reduce ? fadeOnly : cardReveal;
 
   return (
     <section
       id="vertrauen"
-      ref={sectionRef}
       style={{ position: "relative", padding: "var(--tb-section-y) var(--tb-gutter)" }}
     >
       <div style={{ maxWidth: "var(--tb-max)", margin: "0 auto" }}>
@@ -185,19 +165,23 @@ export default function TrustBlocks() {
         </motion.h2>
 
         <div
-          ref={railRef}
           className="tb-trust-rail"
           style={{
             overflowX: "auto",
             overscrollBehaviorX: "contain",
             WebkitOverflowScrolling: "touch",
             scrollSnapType: "x proximity",
-            padding: "16px 4px",
-            margin: "-16px -4px",
+            scrollPaddingInline: "var(--tb-gutter)",
+            marginInline: "calc(-1 * var(--tb-gutter))",
+            paddingInline: "var(--tb-gutter)",
+            paddingBlock: "6px 20px",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%)",
+            maskImage:
+              "linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%)",
           }}
         >
           <motion.div
-            ref={trackRef}
             initial="hidden"
             whileInView="visible"
             viewport={inView}
@@ -207,8 +191,7 @@ export default function TrustBlocks() {
               display: "flex",
               gap: "clamp(16px,3vw,32px)",
               width: "max-content",
-              x: reduce ? 0 : x,
-              willChange: reduce ? undefined : "transform",
+              padding: "4px",
             }}
           >
             {BLOCKS.map((b) => (
@@ -247,8 +230,12 @@ export default function TrustBlocks() {
       </div>
 
       <style>{`
-        .tb-trust-rail { scrollbar-width: none; -ms-overflow-style: none; }
-        .tb-trust-rail::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        .tb-trust-rail { scrollbar-width: thin; scrollbar-color: #38bdf8 rgba(255,255,255,0.05); }
+        .tb-trust-rail::-webkit-scrollbar { height: 6px; }
+        .tb-trust-rail::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+        .tb-trust-rail::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 999px; }
+        .tb-trust-rail::-webkit-scrollbar-thumb { background: linear-gradient(90deg,#4fd1ff,#2862d7); border-radius: 999px; }
+        .tb-trust-rail::-webkit-scrollbar-thumb:hover { background: linear-gradient(90deg,#4fd1ff,#38bdf8); }
         .tb-trust-card:hover {
           border-color: var(--tb-border-strong);
           background: var(--tb-glass-hover);

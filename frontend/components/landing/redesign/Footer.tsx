@@ -23,7 +23,13 @@ const COLS: { title: string; links: { label: string; href: string; external?: bo
 
 export default function Footer() {
   return (
-    <footer style={{ position: "relative", zIndex: 2, borderTop: "1px solid var(--tb-hairline)", padding: "48px var(--tb-gutter) 40px" }}>
+    <footer
+      style={{
+        position: "relative",
+        zIndex: 2,
+        padding: "72px var(--tb-gutter) 40px",
+      }}
+    >
       <div
         style={{
           maxWidth: "var(--tb-max)",
@@ -71,7 +77,7 @@ export default function Footer() {
       </div>
 
       <div style={{ maxWidth: "var(--tb-max)", margin: "32px auto 0", paddingTop: 20, borderTop: "1px solid var(--tb-hairline)", fontSize: 12, color: "var(--tb-text-muted)" }}>
-        © 2026 TraceBuild · Zürich · Impressum &amp; Datenschutz folgen
+        © 2026 TraceBuild · Mels SG · Impressum &amp; Datenschutz folgen
       </div>
     </footer>
   );

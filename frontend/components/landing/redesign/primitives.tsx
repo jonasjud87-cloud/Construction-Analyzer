@@ -61,8 +61,10 @@ export function GhostButton({
       className="tb-btn-ghost"
       style={{
         ...btnBase,
-        background: "var(--tb-glass)",
-        borderColor: "var(--tb-border)",
+        background: "rgba(12,20,32,0.72)",
+        backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
+        borderColor: "var(--tb-border-strong)",
         color: "var(--tb-text)",
       }}
     >
