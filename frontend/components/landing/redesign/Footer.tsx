@@ -43,8 +43,8 @@ export default function Footer() {
             </span>
           </div>
           <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: "var(--tb-text-tertiary)" }}>
-            Technische Zeichnungen automatisch gegen geltende Normen und Vorschriften
-            prüfen. Daten in der Schweiz · DSG-konform.
+            KI-Prüfung von Plänen gegen geltende Normen — als übersichtliche
+            Auswertung, nicht als Eingriff. Daten in der Schweiz · DSG-konform.
           </p>
         </div>
 

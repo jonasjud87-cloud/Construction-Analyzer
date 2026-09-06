@@ -67,7 +67,8 @@ export default function HeroParticles({
 
     const render = (time: number) => {
       const scroll = scrollRef?.current ?? 0;
-      const rotY = time * 0.32 + scroll * 1.6;
+      // no rotation of the ring as a whole — fixed orientation, particles only wobble
+      const rotY = 0.2;
       const tiltX = 0.3;
       const cosR = Math.cos(rotY);
       const sinR = Math.sin(rotY);
@@ -75,17 +76,18 @@ export default function HeroParticles({
       const sinT = Math.sin(tiltX);
       const cx = w / 2;
       const cy = h / 2;
-      const sc = Math.min(w, h) * 0.62 * (1 + scroll * 0.35);
+      const sc = Math.min(w, h) * 0.62 * (1 + scroll * 0.28);
       const fade = 1 - scroll * 0.7;
 
       ctx.clearRect(0, 0, w, h);
       if (fade <= 0.02) return;
 
+      const wob = 0.011;
       for (let i = 0; i < N; i++) {
         const p = ring[i];
-        const dx = p.x;
-        const dy = p.y;
-        const dz = p.z;
+        const dx = p.x + Math.sin(time * 0.5 + i * 0.7) * wob;
+        const dy = p.y + Math.cos(time * 0.42 + i * 1.3) * wob;
+        const dz = p.z + Math.sin(time * 0.6 + i) * wob * 0.6;
         const rx = dx * cosR + dz * sinR;
         let rz = -dx * sinR + dz * cosR;
         const ry = dy * cosT - rz * sinT;
