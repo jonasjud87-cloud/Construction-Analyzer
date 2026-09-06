@@ -23,7 +23,14 @@ const COLS: { title: string; links: { label: string; href: string; external?: bo
 
 export default function Footer() {
   return (
-    <footer style={{ position: "relative", zIndex: 2, borderTop: "1px solid var(--tb-hairline)", padding: "48px var(--tb-gutter) 40px" }}>
+    <footer
+      style={{
+        position: "relative",
+        zIndex: 2,
+        padding: "72px var(--tb-gutter) 40px",
+        background: "linear-gradient(to bottom, rgba(10,20,32,0.45) 0%, rgba(10,20,32,0.12) 45%, transparent 100%)",
+      }}
+    >
       <div
         style={{
           maxWidth: "var(--tb-max)",

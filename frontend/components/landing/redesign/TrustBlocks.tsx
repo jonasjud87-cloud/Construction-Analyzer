@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Eyebrow } from "./primitives";
 import { EASE_OUT, staggerParent, cardReveal, inView } from "@/lib/landing/motion";
 
@@ -137,39 +136,11 @@ const fadeOnly: Variants = {
 
 export default function TrustBlocks() {
   const reduce = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [maxShift, setMaxShift] = useState(0);
-
-  useEffect(() => {
-    if (reduce) {
-      setMaxShift(0);
-      return;
-    }
-    const measure = () => {
-      const rail = railRef.current;
-      const track = trackRef.current;
-      if (!rail || !track) return;
-      setMaxShift(Math.max(0, track.scrollWidth - rail.clientWidth));
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [reduce]);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -maxShift]);
-
   const cardV = reduce ? fadeOnly : cardReveal;
 
   return (
     <section
       id="vertrauen"
-      ref={sectionRef}
       style={{ position: "relative", padding: "var(--tb-section-y) var(--tb-gutter)" }}
     >
       <div style={{ maxWidth: "var(--tb-max)", margin: "0 auto" }}>
@@ -185,19 +156,16 @@ export default function TrustBlocks() {
         </motion.h2>
 
         <div
-          ref={railRef}
           className="tb-trust-rail"
           style={{
             overflowX: "auto",
             overscrollBehaviorX: "contain",
             WebkitOverflowScrolling: "touch",
             scrollSnapType: "x proximity",
-            padding: "16px 4px",
-            margin: "-16px -4px",
+            paddingBottom: 18,
           }}
         >
           <motion.div
-            ref={trackRef}
             initial="hidden"
             whileInView="visible"
             viewport={inView}
@@ -207,8 +175,7 @@ export default function TrustBlocks() {
               display: "flex",
               gap: "clamp(16px,3vw,32px)",
               width: "max-content",
-              x: reduce ? 0 : x,
-              willChange: reduce ? undefined : "transform",
+              padding: "4px",
             }}
           >
             {BLOCKS.map((b) => (
@@ -247,8 +214,11 @@ export default function TrustBlocks() {
       </div>
 
       <style>{`
-        .tb-trust-rail { scrollbar-width: none; -ms-overflow-style: none; }
-        .tb-trust-rail::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        .tb-trust-rail { scrollbar-width: thin; scrollbar-color: rgba(133,166,233,0.3) transparent; }
+        .tb-trust-rail::-webkit-scrollbar { height: 8px; }
+        .tb-trust-rail::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
+        .tb-trust-rail::-webkit-scrollbar-thumb { background: rgba(133,166,233,0.3); border-radius: 4px; }
+        .tb-trust-rail::-webkit-scrollbar-thumb:hover { background: rgba(133,166,233,0.5); }
         .tb-trust-card:hover {
           border-color: var(--tb-border-strong);
           background: var(--tb-glass-hover);

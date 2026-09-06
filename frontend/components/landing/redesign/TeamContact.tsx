@@ -93,8 +93,8 @@ export default function TeamContact() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ margin: "0 0 48px", fontSize: 15, color: "var(--tb-text-secondary)", maxWidth: 520, lineHeight: 1.6 }}
         >
-          Gemeinsam aufgebaut, ohne feste Rollenverteilung. Der Unterschied: Livio lernt
-          Konstrukteur, Jonas Informatiker.
+          TraceBuild ist von uns beiden — von der ersten Idee bis zur fertigen
+          Anwendung. Feste Rollen gibt es keine.
         </motion.p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px,7vw,96px)" }}>

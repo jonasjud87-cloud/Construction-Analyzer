@@ -26,7 +26,7 @@ export default function FinalCta() {
           inset: 0,
           zIndex: 0,
           background:
-            "linear-gradient(to bottom, transparent 0%, transparent 6%, var(--tb-canvas-solid) 42%, var(--tb-canvas-solid) 100%)",
+            "linear-gradient(to bottom, transparent 0%, transparent 5%, rgba(10,20,32,1) 36%, rgba(10,20,32,1) 74%, rgba(10,20,32,0.45) 100%)",
         }}
       />
 
