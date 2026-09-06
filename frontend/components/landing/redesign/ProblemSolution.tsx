@@ -32,9 +32,9 @@ const BEATS: Beat[] = [
     eyebrowColor: "var(--tb-lavender)",
     headline: "TraceBuild macht die Prüfung sichtbar.",
     lines: [
-      "Jede Fundstelle verlinkt auf die Norm.",
-      "Jede Entscheidung dokumentiert.",
-      "Jede Änderung nachvollziehbar.",
+      "PDF hochladen, die KI prüft gegen jede relevante Norm.",
+      "Eine Übersicht: was passt, was kritisch ist, was zu prüfen bleibt.",
+      "Die Zeichnung bleibt unangetastet — freigeben tun Sie.",
     ],
     tick: "var(--tb-accent-gradient)",
     body: "var(--tb-text)",

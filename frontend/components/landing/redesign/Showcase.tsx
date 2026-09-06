@@ -18,11 +18,11 @@ const TABS: { id: Tab; label: string }[] = [
 const COPY: Record<Tab, { h: string; p: string }> = {
   plan: {
     h: "Sehen Sie jeden Konflikt, bevor die Behörde ihn sieht.",
-    p: "Automatische Prüfung gegen SIA-Normen und kantonales Baurecht. Jede Fundstelle mit Massangabe, Normverweis und Kommentar — verortet im Plan.",
+    p: "PDF hochladen — die KI prüft gegen SIA-Normen und kantonales Recht und erstellt eine Übersicht: jeder Befund mit Massangabe, Norm-Verweis und Kommentar, verortet im Plan. Ändern und freigeben bleibt bei Ihnen.",
   },
   normen: {
-    h: "Alle Normen. Eine Quelle. Immer aktuell.",
-    p: "Durchsuchbar, verlinkt und versioniert. Sie sehen, was gilt — und seit wann. Von SIA über VSS bis zur kantonalen Bauordnung.",
+    h: "Alle Normen. Eine Quelle. Zum Nachschlagen.",
+    p: "Übersichtlich, durchsuchbar, verlinkt. Sie sehen schnell, was gilt und seit wann — von SIA über VSS bis zur kantonalen Bauordnung.",
   },
 };
 

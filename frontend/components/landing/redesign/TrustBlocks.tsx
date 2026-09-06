@@ -111,9 +111,9 @@ const BLOCKS = [
   },
   {
     visual: <DocStack />,
-    h: "Ergebnisse, die man sofort versteht.",
-    p: "Jede Prüfung wird übersichtlich dargestellt — sortiert, verortet und einfach zu interpretieren. Kein Wühlen in Listen, kein Rätselraten, was gemeint ist.",
-    proof: "Klare Übersicht · Export als PDF",
+    h: "TraceBuild prüft. Sie entscheiden.",
+    p: "Die KI liefert eine übersichtliche Auswertung — sortiert, verortet, einfach zu interpretieren. Die Zeichnung ändern und die Freigabe erteilen bleibt bei Ihrem Team. Menschenverstand ist hier nicht ersetzbar.",
+    proof: "Kein Eingriff in den Plan · Freigabe durch Ihr Team",
   },
   {
     visual: <Timeline />,

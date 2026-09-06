@@ -18,7 +18,7 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "TraceBuild — Zeichnungen prüfen, Normen einhalten",
   description:
-    "TraceBuild liest Ihre Zeichnungen, gleicht sie mit geltenden Normen und Vorschriften ab und zeigt jede Abweichung — klar dargestellt und nachvollziehbar belegt.",
+    "Pläne als PDF hochladen, KI-Prüfung gegen geltende Normen, eine klare Übersicht der Befunde. TraceBuild prüft — ändern und freigeben bleibt bei Ihrem Team.",
 };
 
 export default function RootLayout({
