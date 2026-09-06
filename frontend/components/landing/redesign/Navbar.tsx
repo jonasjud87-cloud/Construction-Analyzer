@@ -86,9 +86,11 @@ export default function Navbar() {
           justifyContent: "space-between",
           gap: 24,
           borderRadius: "var(--tb-r-card)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid",
+          // blur only once the bar has a solid backing — a backdrop-filter over the
+          // transparent hero bar leaves a ghost fringe on the CTA button
+          backdropFilter: scrolled ? "blur(16px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
+          border: "1px solid rgba(255,255,255,0)",
         }}
         animate={{
           marginTop: scrolled ? 12 : 18,

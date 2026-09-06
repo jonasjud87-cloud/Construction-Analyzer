@@ -8,7 +8,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import PruefrasterField from "./PruefrasterField";
+import HeroParticles from "./HeroParticles";
 import { GradientButton, GhostButton, WordReveal, Eyebrow } from "./primitives";
 import { EASE_OUT } from "@/lib/landing/motion";
 
@@ -45,7 +45,7 @@ export default function Hero() {
       }}
     >
       <motion.div style={{ position: "absolute", inset: 0, opacity: prefersReduced ? 1 : fieldOpacity }}>
-        <PruefrasterField scrollRef={scrollRef} />
+        <HeroParticles scrollRef={scrollRef} />
       </motion.div>
 
       <motion.div
@@ -69,11 +69,10 @@ export default function Hero() {
 
         <h1
           style={{
-            fontSize: "clamp(40px, 6.6vw, 104px)",
-            lineHeight: 1.02,
+            fontSize: "clamp(38px, 6.2vw, 96px)",
+            lineHeight: 1.04,
             letterSpacing: "-0.03em",
             margin: "22px auto 0",
-            maxWidth: 15 + "ch",
             textWrap: "balance" as React.CSSProperties["textWrap"],
           }}
         >

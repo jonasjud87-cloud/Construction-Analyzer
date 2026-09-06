@@ -1,5 +1,6 @@
 import AuthHashRedirect from "@/components/auth/AuthHashRedirect";
 import SmoothScrollProvider from "@/components/landing/redesign/SmoothScrollProvider";
+import IntroOverlay from "@/components/landing/redesign/IntroOverlay";
 import AmbientField from "@/components/landing/redesign/AmbientField";
 import Navbar from "@/components/landing/redesign/Navbar";
 import Hero from "@/components/landing/redesign/Hero";
@@ -18,6 +19,7 @@ export default function LandingPage() {
           zurückfallen lässt, und reicht sie an /auth/callback weiter. */}
       <AuthHashRedirect />
       <div className="tb-landing">
+        <IntroOverlay />
         <a href="#tb-main" className="tb-skip">Zum Inhalt springen</a>
         <AmbientField />
         <div className="tb-grain" />
