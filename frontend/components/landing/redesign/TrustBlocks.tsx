@@ -7,15 +7,25 @@ import { EASE_OUT, staggerParent, cardReveal, inView } from "@/lib/landing/motio
 /* ── palette-only micro-visuals ─────────────────────────────────────────── */
 
 function SwissLine() {
-  // simplified Switzerland outline (Geneva tip lower-left, Ticino spike lower-centre)
+  // Switzerland silhouette from real border waypoints (Geneva point SW,
+  // Basel + Schaffhausen bumps on the north edge, Ticino wedge pointing south,
+  // Val-Müstair poke on the east). Node sits roughly on Bern.
   const CH =
-    "M12,54 L20,46 L16,34 L26,22 L36,15 L42,12 L54,15 L62,12 L66,8 L70,13 " +
-    "L82,12 L92,18 L98,24 L106,33 L110,42 L104,48 L98,50 L92,46 L88,52 " +
-    "L85,62 L82,70 L79,61 L77,53 L68,55 L60,60 L52,56 L44,61 L36,57 L26,58 L18,53 Z";
+    "M11,78 L10,66 L27,41 L54,18 L67,17 L87,8 L105,15 L120,24 L120,49 L141,59 " +
+    "L134,78 L112,74 L100,80 L100,95 L92,81 L68,79 L56,88 L45,90 L37,86 L35,85 " +
+    "L29,70 L16,73 Z";
   return (
-    <svg viewBox="0 0 120 80" width="120" height="80" aria-hidden>
-      <path d={CH} fill="var(--tb-accent)" fillOpacity="0.05" stroke="var(--tb-accent)" strokeWidth="1" strokeOpacity="0.65" strokeLinejoin="round" />
-      <circle cx="50" cy="36" r="3" fill="var(--tb-accent-cyan)">
+    <svg viewBox="0 0 150 104" width="112" height="78" aria-hidden>
+      <path
+        d={CH}
+        fill="var(--tb-accent)"
+        fillOpacity="0.06"
+        stroke="var(--tb-accent)"
+        strokeWidth="1.6"
+        strokeOpacity="0.7"
+        strokeLinejoin="round"
+      />
+      <circle cx="49" cy="45" r="3.4" fill="var(--tb-accent-cyan)">
         <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite" />
       </circle>
     </svg>
