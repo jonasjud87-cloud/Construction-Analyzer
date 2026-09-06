@@ -59,14 +59,14 @@ const FOUNDERS = [
   {
     initials: "JJ",
     name: "Jonas Jud",
-    role: "Mitgründer · lernt Informatiker",
+    role: "Mitgründer",
     email: "jonas@tracebuild.ch",
     blurb: "Hat TraceBuild zusammen mit Livio aufgebaut — von der ersten Idee an.",
   },
   {
     initials: "LT",
     name: "Livio Thoma",
-    role: "Mitgründer · lernt Konstrukteur",
+    role: "Mitgründer",
     email: "livio@tracebuild.ch",
     blurb: "Hat TraceBuild zusammen mit Jonas aufgebaut — von der ersten Idee an.",
   },
@@ -94,7 +94,7 @@ export default function TeamContact() {
           style={{ margin: "0 0 48px", fontSize: 15, color: "var(--tb-text-secondary)", maxWidth: 520, lineHeight: 1.6 }}
         >
           TraceBuild ist von uns beiden — von der ersten Idee bis zur fertigen
-          Anwendung. Feste Rollen gibt es keine.
+          Anwendung.
         </motion.p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px,7vw,96px)" }}>
