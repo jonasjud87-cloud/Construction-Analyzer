@@ -12,12 +12,12 @@ import { useReducedMotion } from "framer-motion";
  * sampled by target X so it reads left-to-right like the wordmark.
  */
 
-const TEXT = "KI Software";
+const TEXT = "Vision. Technology. Impact.";
 const SA = [79, 209, 255]; // #4fd1ff
 const SB = [56, 189, 248]; // #38bdf8
 const SC = [40, 98, 215]; // #2862d7
 const ASSEMBLE_MS = 1900;
-const DESIRED = 1300;
+const DESIRED = 2600;
 
 const lp = (a: number, b: number, t: number) => a + (b - a) * t;
 const rnd = (s: number) => {
@@ -44,15 +44,26 @@ function sampleText(cw: number, ch: number, fam: string, step: number) {
   const octx = oc.getContext("2d");
   if (!octx) return [] as { x: number; y: number }[];
 
-  let fontPx = Math.max(12, Math.round(ch * 0.22));
-  octx.font = `700 ${fontPx}px ${fam}`;
-  const measured = octx.measureText(TEXT).width || 1;
-  fontPx = Math.max(10, Math.min(Math.floor(ch * 0.6), Math.floor((fontPx * cw * 0.7) / measured)));
+  // Stack the phrase over multiple lines on narrower canvases so it stays big
+  // and legible; keep it on one line when there's room.
+  const words = TEXT.split(" ");
+  const probe = 100;
+  octx.font = `700 ${probe}px ${fam}`;
+  const oneLineW = octx.measureText(TEXT).width || 1;
+  const widestWordW = Math.max(...words.map((w) => octx.measureText(w).width || 1));
+  const lines = cw / (oneLineW / probe) < cw * 0.9 && cw > 720 ? [TEXT] : words;
+  const perLineTarget = lines.length === 1 ? oneLineW : widestWordW;
+
+  const targetW = cw * (lines.length === 1 ? 0.82 : 0.7);
+  let fontPx = Math.floor((probe * targetW) / perLineTarget);
+  fontPx = Math.max(11, Math.min(Math.floor((ch * 0.82) / lines.length), fontPx));
   octx.font = `700 ${fontPx}px ${fam}`;
   octx.textAlign = "center";
   octx.textBaseline = "middle";
   octx.fillStyle = "#fff";
-  octx.fillText(TEXT, cw / 2, ch / 2);
+  const lineH = fontPx * 1.14;
+  const top = ch / 2 - ((lines.length - 1) * lineH) / 2;
+  lines.forEach((ln, i) => octx.fillText(ln, cw / 2, top + i * lineH));
 
   let data: Uint8ClampedArray;
   try {
@@ -133,7 +144,7 @@ export default function IntroText() {
         h = Math.max(1, Math.round(canvas.clientHeight * dpr));
         canvas.width = w;
         canvas.height = h;
-        const step = Math.max(2, Math.round(dpr * 2));
+        const step = Math.max(2, Math.round(dpr * 1.4));
         const targets = sampleText(w, h, fam, step);
         const prev = parts;
         parts = targets.map((tg, i) => {
@@ -158,7 +169,7 @@ export default function IntroText() {
         const conv = Math.min(1, elapsed / ASSEMBLE_MS);
         const settled = elapsed >= ASSEMBLE_MS;
         const ease = 0.06 + 0.03 * conv;
-        const dot = Math.max(1, (isMobile ? 1.3 : 1.6) * dpr);
+        const dot = Math.max(0.85, (isMobile ? 0.95 : 1.1) * dpr);
         const t = elapsed / 1000;
 
         ctx.clearRect(0, 0, w, h);

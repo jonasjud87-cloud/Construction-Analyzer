@@ -12,14 +12,15 @@ const useIsoEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect
 /* Phase timeline (non-reduced):
    A  0 → 1900ms   logo + wordmark fade/scale in, sit
    B  1900 → ~2350 logo + wordmark fade/scale out (0.45s)
-   C  2500 → 7000  particles assemble into "KI Software" (~1.9s) then hold (~2.6s)
-   D  7000ms       overlay slides up (0.7s), unmounts on animation complete
-   Total on screen ≈ 7.7s. The scene cannot be skipped — scrolling is fully
+   C  2500 → 8800  particles assemble into "Vision. Technology. Impact."
+                   (~1.9s) then hold ~4.4s so the words are clearly readable
+   D  8800ms       overlay slides up (0.7s), unmounts on animation complete
+   Total on screen ≈ 9.5s. The scene cannot be skipped — scrolling is fully
    blocked until it finishes.
    Reduced motion: hold 1500ms, 300ms opacity fade, unmount — no B, no C. */
 const PHASE_B_MS = 1900;
 const PHASE_C_MS = 2500;
-const PHASE_D_MS = 7000;
+const PHASE_D_MS = 8800;
 const REDUCED_HOLD_MS = 1500;
 
 export default function IntroOverlay() {

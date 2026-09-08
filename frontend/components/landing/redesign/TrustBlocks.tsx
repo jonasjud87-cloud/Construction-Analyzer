@@ -6,26 +6,40 @@ import { EASE_OUT, staggerParent, cardReveal, inView } from "@/lib/landing/motio
 
 /* ── palette-only micro-visuals ─────────────────────────────────────────── */
 
-function SwissLine() {
-  // Switzerland silhouette from real border waypoints (Geneva point SW,
-  // Basel + Schaffhausen bumps on the north edge, Ticino wedge pointing south,
-  // Val-Müstair poke on the east). Node sits roughly on Bern.
-  const CH =
-    "M11,78 L10,66 L27,41 L54,18 L67,17 L87,8 L105,15 L120,24 L120,49 L141,59 " +
-    "L134,78 L112,74 L100,80 L100,95 L92,81 L68,79 L56,88 L45,90 L37,86 L35,85 " +
-    "L29,70 L16,73 Z";
+function Secure() {
   return (
-    <svg viewBox="0 0 150 104" width="112" height="78" aria-hidden>
-      <path
-        d={CH}
+    <svg viewBox="0 0 120 80" width="120" height="80" aria-hidden>
+      <rect
+        x="42"
+        y="34"
+        width="36"
+        height="30"
+        rx="4"
         fill="var(--tb-accent)"
         fillOpacity="0.06"
         stroke="var(--tb-accent)"
         strokeWidth="1.6"
-        strokeOpacity="0.7"
-        strokeLinejoin="round"
+        strokeOpacity="0.6"
       />
-      <circle cx="49" cy="45" r="3.4" fill="var(--tb-accent-cyan)">
+      <path
+        d="M49,34 V26 a11,11 0 0 1 22,0 V34"
+        fill="none"
+        stroke="var(--tb-accent)"
+        strokeWidth="1.6"
+        strokeOpacity="0.6"
+        strokeLinecap="round"
+      />
+      <line
+        x1="60"
+        y1="48"
+        x2="60"
+        y2="56"
+        stroke="var(--tb-accent)"
+        strokeWidth="1.6"
+        strokeOpacity="0.6"
+        strokeLinecap="round"
+      />
+      <circle cx="60" cy="46" r="3.2" fill="var(--tb-accent-cyan)">
         <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite" />
       </circle>
     </svg>
@@ -113,10 +127,11 @@ function Monogram() {
 
 const BLOCKS = [
   {
-    visual: <SwissLine />,
-    h: "Ihre Projektdaten verlassen die Schweiz nicht.",
-    p: "Hosting in Schweizer Rechenzentren, DSG-konform, verschlüsselt im Transport und im Speicher. Kein Datenabfluss in Drittländer.",
-    proof: "Datenstandort CH · ISO-27001-zertifizierte Infrastruktur",
+    visual: <Secure />,
+    h: "Ihre Daten sind sicher.",
+    p: "Jede Übertragung ist verschlüsselt, und auch gespeicherte Daten liegen verschlüsselt vor. Die Verarbeitung ist am Schweizer Datenschutzgesetz orientiert. Zugriff erhalten nur berechtigte Personen - geregelt über rollenbasierte Rechte.",
+    proof: "Verschlüsselt · Zugriffskontrolliert",
+    muted: false,
   },
   {
     visual: <DocStack />,
@@ -127,8 +142,9 @@ const BLOCKS = [
         Sie entscheiden.
       </>
     ),
-    p: "Die KI liefert eine übersichtliche Auswertung — sortiert, verortet, einfach zu interpretieren. Die Zeichnung ändern und die Freigabe erteilen bleibt bei Ihrem Team. Menschenverstand ist hier nicht ersetzbar.",
+    p: "Die KI liefert eine übersichtliche Auswertung - sortiert, verortet, einfach zu interpretieren. Die Zeichnung ändern und die Freigabe erteilen bleibt bei Ihrem Team. Menschenverstand ist hier nicht ersetzbar.",
     proof: "Kein Eingriff in den Plan · Freigabe durch Ihr Team",
+    muted: false,
   },
   {
     visual: <Timeline />,
@@ -139,14 +155,36 @@ const BLOCKS = [
         sagen wir Bescheid.
       </>
     ),
-    p: "Wir behalten Normen und Vorschriften im Blick, damit Sie es nicht müssen. Wird für Ihr Projekt etwas relevant, hören Sie von uns — bevor es zum Problem wird.",
+    p: "Wir behalten Normen und Vorschriften im Blick, damit Sie es nicht müssen. Wird für Ihr Projekt etwas relevant, hören Sie von uns - bevor es zum Problem wird.",
     proof: "Wir schauen hin · Sie bekommen Bescheid",
+    muted: false,
   },
   {
     visual: <Monogram />,
-    h: "Sie schreiben uns, wir helfen.",
-    p: "Kein Ticket-System, keine Warteschleife. Wir kennen nicht jede Vorschrift auswendig — aber wir packen mit an, wo wir können, und melden uns schnell.",
-    proof: "Fester Kontakt · Antwort < 1 Werktag",
+    h: "Persönlicher Support",
+    p: (
+      <>
+        Bald verfügbar.
+        <br />
+        <span
+          style={{
+            display: "inline-block",
+            marginTop: 10,
+            fontSize: 10.5,
+            letterSpacing: ".12em",
+            textTransform: "uppercase",
+            color: "var(--tb-lavender)",
+            border: "1px solid var(--tb-hairline)",
+            borderRadius: "var(--tb-r-pill)",
+            padding: "3px 10px",
+          }}
+        >
+          Coming soon
+        </span>
+      </>
+    ),
+    proof: "In Vorbereitung",
+    muted: true,
   },
 ];
 
@@ -223,6 +261,7 @@ export default function TrustBlocks() {
                   display: "flex",
                   flexDirection: "column",
                   gap: 18,
+                  opacity: b.muted ? 0.6 : 1,
                   transition:
                     "border-color var(--tb-dur-base) var(--tb-ease-out), box-shadow var(--tb-dur-base) var(--tb-ease-out), background var(--tb-dur-base) var(--tb-ease-out)",
                 }}

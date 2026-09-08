@@ -21,7 +21,7 @@ const BEATS: Beat[] = [
     headline: "Ein übersehener Grenzabstand kostet Wochen.",
     lines: [
       "Normen ändern sich. Kantonal. Ständig.",
-      "Die Prüfung passiert im Kopf — oder gar nicht.",
+      "Die Prüfung passiert im Kopf - oder gar nicht.",
       "Fehler fallen erst spät auf.",
     ],
     tick: "var(--tb-lavender)",
@@ -34,7 +34,7 @@ const BEATS: Beat[] = [
     lines: [
       "PDF hochladen, die KI prüft gegen jede relevante Norm.",
       "Eine Übersicht: was passt, was kritisch ist, was zu prüfen bleibt.",
-      "Die Zeichnung bleibt unangetastet — freigeben tun Sie.",
+      "Die Zeichnung bleibt unangetastet - freigeben tun Sie.",
     ],
     tick: "var(--tb-accent-gradient)",
     body: "var(--tb-text)",

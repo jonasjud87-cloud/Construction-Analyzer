@@ -10,6 +10,7 @@ import TrustBlocks from "@/components/landing/redesign/TrustBlocks";
 import Pricing from "@/components/landing/redesign/Pricing";
 import TeamContact from "@/components/landing/redesign/TeamContact";
 import FinalCta from "@/components/landing/redesign/FinalCta";
+import SectionDivider from "@/components/landing/redesign/SectionDivider";
 import Footer from "@/components/landing/redesign/Footer";
 
 export default function LandingPage() {
@@ -27,10 +28,15 @@ export default function LandingPage() {
         <main id="tb-main">
           <Hero />
           <ProblemSolution />
+          <SectionDivider variant="line" />
           <Showcase />
+          <SectionDivider variant="node" />
           <TrustBlocks />
+          <SectionDivider variant="wide" />
           <Pricing />
+          <SectionDivider variant="gap" />
           <TeamContact />
+          <SectionDivider variant="line" />
           <FinalCta />
         </main>
         <Footer />
