@@ -10,7 +10,7 @@ type Item = { q: string; a: string };
 const ITEMS: Item[] = [
   {
     q: "Was passiert mit unseren Daten?",
-    a: "Ihre Daten werden verschlüsselt übertragen und gespeichert, der Zugriff ist rollenbasiert kontrolliert. Verarbeitung nach den Grundsätzen des Schweizer Datenschutzgesetzes.",
+    a: "Coming soon",
   },
   {
     q: "Ändert TraceBuild etwas an der Zeichnung?",
