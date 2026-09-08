@@ -24,7 +24,7 @@ const COPY: Record<Tab, { h: React.ReactNode; p: string }> = {
         bevor die Behörde ihn sieht.
       </>
     ),
-    p: "PDF hochladen — die KI prüft gegen SIA-Normen und kantonales Recht und erstellt eine Übersicht: jeder Befund mit Massangabe, Norm-Verweis und Kommentar, verortet im Plan. Ändern und freigeben bleibt bei Ihnen.",
+    p: "PDF hochladen - die KI prüft gegen SIA-Normen und kantonales Recht und erstellt eine Übersicht: jeder Befund mit Massangabe, Norm-Verweis und Kommentar, verortet im Plan. Ändern und freigeben bleibt bei Ihnen.",
   },
   normen: {
     h: (
@@ -34,7 +34,7 @@ const COPY: Record<Tab, { h: React.ReactNode; p: string }> = {
         Zum Nachschlagen.
       </>
     ),
-    p: "Übersichtlich, durchsuchbar, verlinkt. Sie sehen schnell, was gilt und seit wann — von SIA über VSS bis zur kantonalen Bauordnung.",
+    p: "Übersichtlich, durchsuchbar, verlinkt. Sie sehen schnell, was gilt und seit wann - von SIA über VSS bis zur kantonalen Bauordnung.",
   },
 };
 

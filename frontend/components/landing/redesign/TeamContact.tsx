@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Eyebrow } from "./primitives";
 import { EASE_OUT, inView } from "@/lib/landing/motion";
 
-/* abstract topographic contour "portrait" — single accent hairline, no face */
+/* abstract topographic contour "portrait" - single accent hairline, no face */
 function Contour({ mirror = false }: { mirror?: boolean }) {
   const rings = [
     "M60,18 C90,18 108,40 108,70 C108,104 88,128 60,128 C32,128 12,104 12,70 C12,40 30,18 60,18 Z",
@@ -61,14 +61,14 @@ const FOUNDERS = [
     name: "Jonas Jud",
     role: "Mitgründer",
     email: "jonas@tracebuild.ch",
-    blurb: "Hat TraceBuild zusammen mit Livio aufgebaut — von der ersten Idee an.",
+    blurb: "Hat TraceBuild zusammen mit Livio aufgebaut - von der ersten Idee an.",
   },
   {
     initials: "LT",
     name: "Livio Thoma",
     role: "Mitgründer",
     email: "livio@tracebuild.ch",
-    blurb: "Hat TraceBuild zusammen mit Jonas aufgebaut — von der ersten Idee an.",
+    blurb: "Hat TraceBuild zusammen mit Jonas aufgebaut - von der ersten Idee an.",
   },
 ];
 
@@ -93,7 +93,7 @@ export default function TeamContact() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ margin: "0 0 48px", fontSize: 15, color: "var(--tb-text-secondary)", maxWidth: 520, lineHeight: 1.6 }}
         >
-          TraceBuild ist von uns beiden — von der ersten Idee bis zur fertigen
+          TraceBuild ist von uns beiden - von der ersten Idee bis zur fertigen
           Anwendung.
         </motion.p>
 
@@ -152,9 +152,9 @@ export default function TeamContact() {
                 <h3 style={{ fontSize: "clamp(22px,2.4vw,32px)", margin: 0 }}>{f.name}</h3>
                 <p style={{ margin: "6px 0 20px", fontSize: 13.5, color: "var(--tb-text-tertiary)" }}>{f.role}</p>
                 <p style={{ margin: 0, fontSize: "clamp(15px,1.4vw,18px)", lineHeight: 1.6, color: "var(--tb-text-secondary)", maxWidth: 480 }}>
-                  {f.blurb.split(" — ")[0]} —
+                  {f.blurb.split(" - ")[0]} -
                   <br />
-                  {f.blurb.split(" — ")[1]}
+                  {f.blurb.split(" - ")[1]}
                 </p>
                 <a
                   href={`mailto:${f.email}`}

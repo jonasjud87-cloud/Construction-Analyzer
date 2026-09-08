@@ -16,6 +16,7 @@ const COLS: { title: string; links: { label: string; href: string; external?: bo
     links: [
       { label: "Team", href: "#kontakt" },
       { label: "Kontakt", href: "mailto:jonas@tracebuild.ch" },
+      { label: "Impressum", href: "/impressum", external: true },
       { label: "Anmelden", href: "/login", external: true },
     ],
   },
@@ -49,8 +50,8 @@ export default function Footer() {
             </span>
           </div>
           <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.6, color: "var(--tb-text-tertiary)" }}>
-            KI-Prüfung von Plänen gegen geltende Normen — als übersichtliche
-            Auswertung, nicht als Eingriff. Daten in der Schweiz · DSG-konform.
+            KI-Prüfung von Plänen gegen geltende Normen - als übersichtliche
+            Auswertung, nicht als Eingriff. Verschlüsselt · DSG-konform.
           </p>
         </div>
 
@@ -77,7 +78,9 @@ export default function Footer() {
       </div>
 
       <div style={{ maxWidth: "var(--tb-max)", margin: "32px auto 0", paddingTop: 20, borderTop: "1px solid var(--tb-hairline)", fontSize: 12, color: "var(--tb-text-muted)" }}>
-        © 2026 TraceBuild · Mels SG · Impressum &amp; Datenschutz folgen
+        © 2026 TraceBuild · Mels SG ·{" "}
+        <Link href="/impressum" style={{ color: "inherit", textDecoration: "none" }}>Impressum</Link>
+        {" · Datenschutz folgt"}
       </div>
     </footer>
   );

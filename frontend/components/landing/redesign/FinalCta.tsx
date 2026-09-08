@@ -49,7 +49,7 @@ export default function FinalCta() {
           }}
           style={{ margin: "22px auto 34px", fontSize: 16, lineHeight: 1.6, color: "var(--tb-text-secondary)", maxWidth: 460 }}
         >
-          Zeigen Sie uns ein Projekt — wir zeigen Ihnen, was TraceBuild findet.
+          Zeigen Sie uns ein Projekt - wir zeigen Ihnen, was TraceBuild findet.
         </motion.p>
         <motion.div
           variants={{

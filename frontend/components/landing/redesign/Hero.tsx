@@ -9,7 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import HeroParticles from "./HeroParticles";
-import { GradientButton, GhostButton, WordReveal, Eyebrow } from "./primitives";
+import { GradientButton, GhostButton, WordReveal } from "./primitives";
 import { EASE_OUT } from "@/lib/landing/motion";
 
 export default function Hero() {
@@ -59,20 +59,12 @@ export default function Hero() {
           opacity: prefersReduced ? 1 : contentOpacity,
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE_OUT }}
-        >
-          <Eyebrow>Für Architekturbüros in der Schweiz</Eyebrow>
-        </motion.div>
-
         <h1
           style={{
             fontSize: "clamp(38px, 6.2vw, 96px)",
             lineHeight: 1.04,
             letterSpacing: "-0.03em",
-            margin: "22px auto 0",
+            margin: 0,
             textWrap: "balance" as React.CSSProperties["textWrap"],
           }}
         >
@@ -94,7 +86,7 @@ export default function Hero() {
           }}
         >
           TraceBuild liest Ihre Zeichnungen, gleicht sie mit geltenden Normen und
-          Vorschriften ab und zeigt jede Abweichung — klar dargestellt und
+          Vorschriften ab und zeigt jede Abweichung - klar dargestellt und
           nachvollziehbar belegt.
         </motion.p>
 

@@ -10,6 +10,7 @@ import { EASE_OUT } from "@/lib/landing/motion";
 
 const LINKS = [
   { href: "#produkt", label: "Produktvorschau" },
+  { href: "#vertrauen", label: "Qualität" },
   { href: "#preise", label: "Preise" },
   { href: "#kontakt", label: "Team" },
 ];

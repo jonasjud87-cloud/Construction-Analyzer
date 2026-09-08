@@ -49,6 +49,8 @@ export async function middleware(request: NextRequest) {
     const isCallbackRoute = pathname.startsWith("/auth/callback");
     const isAuthRoute    = pathname.startsWith("/login") || pathname.startsWith("/register") || isCallbackRoute;
     const isLandingRoute = pathname === "/";
+    // Öffentliche Seiten (rechtliche Angaben), ohne Login erreichbar.
+    const isPublicRoute  = pathname.startsWith("/impressum") || pathname.startsWith("/datenschutz");
     const isAdmin        = ADMIN_EMAILS.has(user?.email ?? "");
 
     const isLoginOrRegister = pathname.startsWith("/login") || pathname.startsWith("/register");
@@ -58,7 +60,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (!user && !isAuthRoute && !isLandingRoute) {
+    if (!user && !isAuthRoute && !isLandingRoute && !isPublicRoute) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       return NextResponse.redirect(url);
