@@ -4,15 +4,16 @@ import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 
 /**
- * Intro overlay · Phase C. ~1300 particles scatter in from anywhere across the
- * viewport and lerp onto the glyphs of the word "KI Software" (sampled from an
+ * Intro overlay · Phase C. ~2600 particles scatter in from anywhere across the
+ * viewport and lerp onto the glyphs of the phrase "Vision. Technologie. Wirkung."
+ * (sampled from an
  * offscreen canvas), then hold with a faint per-particle shimmer. Canvas 2D,
  * full-viewport, DPR-clamped, 30 fps, pauses off-screen / hidden, RAF cancelled
  * on unmount. Palette only: the SA/SB/SC stops are the brand cyan / sky / blue,
  * sampled by target X so it reads left-to-right like the wordmark.
  */
 
-const TEXT = "Vision. Technology. Impact.";
+const TEXT = "Vision. Technologie. Wirkung.";
 const SA = [79, 209, 255]; // #4fd1ff
 const SB = [56, 189, 248]; // #38bdf8
 const SC = [40, 98, 215]; // #2862d7

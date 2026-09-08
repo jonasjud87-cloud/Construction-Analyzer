@@ -99,23 +99,6 @@ export function Eyebrow({
   );
 }
 
-/* ── Accent word (gradient text) ────────────────────────────────────────── */
-
-export function Accent({ children }: { children: React.ReactNode }) {
-  return (
-    <span
-      style={{
-        background: "var(--tb-accent-gradient)",
-        WebkitBackgroundClip: "text",
-        backgroundClip: "text",
-        color: "transparent",
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
 /* ── Word-by-word clip-mask reveal for big headlines ────────────────────── */
 /* CSS-driven (see globals.css .tb-word-*): runs at first paint, no JS/hydration
    dependency, degrades to plain visible text. */

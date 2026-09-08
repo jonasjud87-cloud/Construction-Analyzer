@@ -24,7 +24,7 @@ const COPY: Record<Tab, { h: React.ReactNode; p: string }> = {
         bevor die Behörde ihn sieht.
       </>
     ),
-    p: "PDF hochladen - die KI prüft gegen SIA-Normen und kantonales Recht und erstellt eine Übersicht: jeder Befund mit Massangabe, Norm-Verweis und Kommentar, verortet im Plan. Ändern und freigeben bleibt bei Ihnen.",
+    p: "PDF hochladen - die KI prüft gegen SIA-Normen und kantonales Recht und erstellt einen Bericht: jeder Befund mit Massangabe, Norm-Verweis und Kommentar. Ändern und freigeben bleibt bei Ihnen.",
   },
   normen: {
     h: (

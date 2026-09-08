@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ok, err, unauthorized } from "@/lib/auth";
+import { getAuthUser, ok, err, unauthorized, forbidden } from "@/lib/auth";
 import { validateChangeStatus } from "@/lib/validations/organization";
 import { formatOrg } from "@/lib/organizations";
 
@@ -9,9 +8,9 @@ type RouteContext = { params: { id: string } };
 
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   const { id } = params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return unauthorized();
+  if (user.role !== "super_admin") return forbidden();
 
   let body: unknown;
   try { body = await req.json(); } catch { return err("Ungültiger JSON-Body"); }

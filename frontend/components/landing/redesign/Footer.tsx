@@ -17,6 +17,7 @@ const COLS: { title: string; links: { label: string; href: string; external?: bo
       { label: "Team", href: "#kontakt" },
       { label: "Kontakt", href: "mailto:jonas@tracebuild.ch" },
       { label: "Impressum", href: "/impressum", external: true },
+      { label: "Datenschutz", href: "/datenschutz", external: true },
       { label: "Anmelden", href: "/login", external: true },
     ],
   },
@@ -80,7 +81,8 @@ export default function Footer() {
       <div style={{ maxWidth: "var(--tb-max)", margin: "32px auto 0", paddingTop: 20, borderTop: "1px solid var(--tb-hairline)", fontSize: 12, color: "var(--tb-text-muted)" }}>
         © 2026 TraceBuild · Mels SG ·{" "}
         <Link href="/impressum" style={{ color: "inherit", textDecoration: "none" }}>Impressum</Link>
-        {" · Datenschutz folgt"}
+        {" · "}
+        <Link href="/datenschutz" style={{ color: "inherit", textDecoration: "none" }}>Datenschutz</Link>
       </div>
     </footer>
   );

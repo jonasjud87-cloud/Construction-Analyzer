@@ -6,7 +6,7 @@ import { EASE_OUT, staggerParent, cardReveal, inView } from "@/lib/landing/motio
 
 /* ── palette-only micro-visuals ─────────────────────────────────────────── */
 
-function Secure() {
+function Secure({ reduce }: { reduce: boolean }) {
   return (
     <svg viewBox="0 0 120 80" width="120" height="80" aria-hidden>
       <rect
@@ -40,7 +40,9 @@ function Secure() {
         strokeLinecap="round"
       />
       <circle cx="60" cy="46" r="3.2" fill="var(--tb-accent-cyan)">
-        <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite" />
+        {!reduce && (
+          <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite" />
+        )}
       </circle>
     </svg>
   );
@@ -67,7 +69,7 @@ function DocStack() {
   );
 }
 
-function Timeline() {
+function Timeline({ reduce }: { reduce: boolean }) {
   return (
     <svg viewBox="0 0 120 80" width="120" height="80" aria-hidden>
       <line x1="60" y1="8" x2="60" y2="72" stroke="var(--tb-accent)" strokeWidth="1" strokeOpacity="0.4" />
@@ -75,118 +77,16 @@ function Timeline() {
         <circle key={y} cx="60" cy={y} r="2.5" fill="var(--tb-accent)" fillOpacity="0.55" />
       ))}
       <circle cx="60" cy="62" r="4" fill="var(--tb-info)">
-        <animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite" />
+        {!reduce && (
+          <>
+            <animate attributeName="r" values="4;6;4" dur="3s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite" />
+          </>
+        )}
       </circle>
     </svg>
   );
 }
-
-function Monogram() {
-  return (
-    <div
-      aria-hidden
-      style={{
-        width: 120,
-        height: 80,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <span
-        style={{
-          width: 56,
-          height: 56,
-          borderRadius: "var(--tb-r-pill)",
-          background: "var(--tb-glass)",
-          border: "1px solid var(--tb-border)",
-          boxShadow: "0 0 0 4px rgba(56,189,248,0.12)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-display, sans-serif)",
-            fontWeight: 700,
-            fontSize: 18,
-            background: "var(--tb-accent-gradient)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          TB
-        </span>
-      </span>
-    </div>
-  );
-}
-
-const BLOCKS = [
-  {
-    visual: <Secure />,
-    h: "Ihre Daten sind sicher.",
-    p: "Jede Übertragung ist verschlüsselt, und auch gespeicherte Daten liegen verschlüsselt vor. Die Verarbeitung ist am Schweizer Datenschutzgesetz orientiert. Zugriff erhalten nur berechtigte Personen - geregelt über rollenbasierte Rechte.",
-    proof: "Verschlüsselt · Zugriffskontrolliert",
-    muted: false,
-  },
-  {
-    visual: <DocStack />,
-    h: (
-      <>
-        TraceBuild prüft.
-        <br />
-        Sie entscheiden.
-      </>
-    ),
-    p: "Die KI liefert eine übersichtliche Auswertung - sortiert, verortet, einfach zu interpretieren. Die Zeichnung ändern und die Freigabe erteilen bleibt bei Ihrem Team. Menschenverstand ist hier nicht ersetzbar.",
-    proof: "Kein Eingriff in den Plan · Freigabe durch Ihr Team",
-    muted: false,
-  },
-  {
-    visual: <Timeline />,
-    h: (
-      <>
-        Ändert sich was,
-        <br />
-        sagen wir Bescheid.
-      </>
-    ),
-    p: "Wir behalten Normen und Vorschriften im Blick, damit Sie es nicht müssen. Wird für Ihr Projekt etwas relevant, hören Sie von uns - bevor es zum Problem wird.",
-    proof: "Wir schauen hin · Sie bekommen Bescheid",
-    muted: false,
-  },
-  {
-    visual: <Monogram />,
-    h: "Persönlicher Support",
-    p: (
-      <>
-        Bald verfügbar.
-        <br />
-        <span
-          style={{
-            display: "inline-block",
-            marginTop: 10,
-            fontSize: 10.5,
-            letterSpacing: ".12em",
-            textTransform: "uppercase",
-            color: "var(--tb-lavender)",
-            border: "1px solid var(--tb-hairline)",
-            borderRadius: "var(--tb-r-pill)",
-            padding: "3px 10px",
-          }}
-        >
-          Coming soon
-        </span>
-      </>
-    ),
-    proof: "In Vorbereitung",
-    muted: true,
-  },
-];
 
 const fadeOnly: Variants = {
   hidden: { opacity: 0 },
@@ -194,8 +94,29 @@ const fadeOnly: Variants = {
 };
 
 export default function TrustBlocks() {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotion() ?? false;
   const cardV = reduce ? fadeOnly : cardReveal;
+
+  const BLOCKS = [
+    {
+      visual: <Secure reduce={reduce} />,
+      h: "Ihre Daten sind sicher.",
+      p: "Jede Übertragung ist verschlüsselt, und auch gespeicherte Daten liegen verschlüsselt vor. Die Verarbeitung ist am Schweizer Datenschutzgesetz orientiert. Zugriff erhalten nur berechtigte Personen - geregelt über rollenbasierte Rechte.",
+      proof: "Verschlüsselt · Zugriffskontrolliert",
+    },
+    {
+      visual: <DocStack />,
+      h: "TraceBuild prüft. Sie entscheiden.",
+      p: "Die KI liefert eine übersichtliche Auswertung - sortiert, verortet, einfach zu interpretieren. Die Zeichnung ändern und die Freigabe erteilen bleibt bei Ihrem Team. Menschenverstand ist hier nicht ersetzbar.",
+      proof: "Kein Eingriff in den Plan · Freigabe durch Ihr Team",
+    },
+    {
+      visual: <Timeline reduce={reduce} />,
+      h: "Ändert sich was, sagen wir Bescheid.",
+      p: "Wir behalten Normen und Vorschriften im Blick, damit Sie es nicht müssen. Wird für Ihr Projekt etwas relevant, hören Sie von uns - bevor es zum Problem wird.",
+      proof: "Wir schauen hin · Sie bekommen Bescheid",
+    },
+  ];
 
   return (
     <section
@@ -205,46 +126,23 @@ export default function TrustBlocks() {
       <div style={{ maxWidth: "var(--tb-max)", margin: "0 auto" }}>
         <Eyebrow>Qualität</Eyebrow>
         <motion.h2
+          className="tb-trust-heading"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={inView}
           transition={{ duration: 0.6, ease: EASE_OUT }}
           style={{ fontSize: "clamp(26px,3.4vw,44px)", margin: "18px 0 48px", maxWidth: 620 }}
         >
-          Unser Anspruch an
-          <br />
-          jede Prüfung.
+          Unser Anspruch an jede Prüfung.
         </motion.h2>
 
-        <div
-          className="tb-trust-rail"
-          style={{
-            overflowX: "auto",
-            overscrollBehaviorX: "contain",
-            WebkitOverflowScrolling: "touch",
-            scrollSnapType: "x proximity",
-            scrollPaddingInline: "var(--tb-gutter)",
-            marginInline: "calc(-1 * var(--tb-gutter))",
-            paddingInline: "var(--tb-gutter)",
-            paddingBlock: "6px 20px",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%)",
-            maskImage:
-              "linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%)",
-          }}
-        >
+        <div className="tb-trust-rail">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={inView}
             variants={staggerParent(0.09)}
             className="tb-trust-track"
-            style={{
-              display: "flex",
-              gap: "clamp(16px,3vw,32px)",
-              width: "max-content",
-              padding: "4px",
-            }}
           >
             {BLOCKS.map((b) => (
               <motion.article
@@ -252,8 +150,6 @@ export default function TrustBlocks() {
                 variants={cardV}
                 className="tb-trust-card"
                 style={{
-                  flex: "0 0 clamp(280px,78vw,400px)",
-                  scrollSnapAlign: "start",
                   borderRadius: "var(--tb-r-container)",
                   border: "1px solid var(--tb-border)",
                   background: "var(--tb-glass)",
@@ -261,7 +157,6 @@ export default function TrustBlocks() {
                   display: "flex",
                   flexDirection: "column",
                   gap: 18,
-                  opacity: b.muted ? 0.6 : 1,
                   transition:
                     "border-color var(--tb-dur-base) var(--tb-ease-out), box-shadow var(--tb-dur-base) var(--tb-ease-out), background var(--tb-dur-base) var(--tb-ease-out)",
                 }}
@@ -283,7 +178,47 @@ export default function TrustBlocks() {
       </div>
 
       <style>{`
-        .tb-trust-rail { scrollbar-width: thin; scrollbar-color: #38bdf8 rgba(255,255,255,0.05); }
+        .tb-trust-heading { text-wrap: balance; }
+
+        /* Grid is the SSR + first-client default (safer, no horizontal scroll). */
+        .tb-trust-rail {
+          overflow: visible;
+        }
+        .tb-trust-track {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: clamp(16px, 3vw, 32px);
+          padding: 4px;
+        }
+        .tb-trust-card { text-wrap: balance; }
+
+        /* Below 768px: horizontal scroll rail so 3 cards don't cram. */
+        @media (max-width: 767px) {
+          .tb-trust-rail {
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x proximity;
+            scroll-padding-inline: var(--tb-gutter);
+            margin-inline: calc(-1 * var(--tb-gutter));
+            padding-inline: var(--tb-gutter);
+            padding-block: 6px 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #38bdf8 rgba(255,255,255,0.05);
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 var(--tb-gutter), #000 calc(100% - var(--tb-gutter)), transparent 100%);
+          }
+          .tb-trust-track {
+            display: flex;
+            gap: clamp(16px, 3vw, 32px);
+            width: max-content;
+          }
+          .tb-trust-card {
+            flex: 0 0 clamp(280px, 78vw, 400px);
+            scroll-snap-align: start;
+          }
+        }
+
         .tb-trust-rail::-webkit-scrollbar { height: 6px; }
         .tb-trust-rail::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
         .tb-trust-rail::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 999px; }
