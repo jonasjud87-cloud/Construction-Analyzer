@@ -80,6 +80,18 @@ export default function IntroOverlay() {
     };
   }, [leaving, prefersReduced]);
 
+  // Failsafe: if onAnimationComplete never fires (render error, superseded
+  // animation, mid-leave reduced-motion toggle), the scroll-lock must still
+  // release. Hard-remove the overlay a bit after it should have gone.
+  useEffect(() => {
+    const cap = (prefersReduced ? REDUCED_HOLD_MS + 500 : PHASE_D_MS) + 2500;
+    const t = window.setTimeout(() => {
+      finished.current = true;
+      setInDom(false);
+    }, cap);
+    return () => window.clearTimeout(t);
+  }, [prefersReduced]);
+
   if (!inDom) return null;
 
   const settle = () => {

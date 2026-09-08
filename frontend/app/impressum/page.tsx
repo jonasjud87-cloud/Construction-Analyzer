@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import AmbientField from "@/components/landing/redesign/AmbientField";
+import Footer from "@/components/landing/redesign/Footer";
 
 export const metadata: Metadata = {
   title: "Impressum - TraceBuild",
@@ -25,10 +27,15 @@ const body: React.CSSProperties = {
 
 export default function ImpressumPage() {
   return (
-    <div
-      className="tb-landing"
-      style={{ minHeight: "100vh", padding: "clamp(64px, 12vh, 140px) var(--tb-gutter)" }}
-    >
+    <div className="tb-landing" style={{ minHeight: "100vh" }}>
+      <AmbientField />
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          padding: "clamp(64px, 12vh, 140px) var(--tb-gutter)",
+        }}
+      >
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
         <Link
           href="/"
@@ -101,6 +108,9 @@ export default function ImpressumPage() {
           Angaben zu Adresse und Rechtsform werden ergänzt.
         </p>
       </div>
+      </div>
+
+      <Footer />
     </div>
   );
 }

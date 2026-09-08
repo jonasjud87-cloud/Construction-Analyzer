@@ -1,4 +1,14 @@
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+import { redirect } from "next/navigation";
+import { getAuthUser } from "@/lib/auth";
+
+// Defense in depth: the admin area never depends on middleware alone. A member
+// or project_manager is bounced even if the middleware gate is bypassed/fails.
+// (super_admin sees the cockpit, org_admin reaches /admin/org.)
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const user = await getAuthUser();
+  if (!user) redirect("/login");
+  if (user.role !== "super_admin" && user.role !== "org_admin") redirect("/dashboard");
+
   return (
     <div style={{ minHeight: "100vh", position: "relative", background: "linear-gradient(150deg,#0a1a24 0%,#0a1420 45%,#070b14 100%) fixed" }}>
       <style>{`@keyframes glowPulse { 0%,100%{opacity:.16;transform:scale(1)} 50%{opacity:.28;transform:scale(1.1)} }`}</style>

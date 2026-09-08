@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
+/* scroll-behavior: smooth removed — Lenis owns smooth scrolling on the
+   landing page (this rule collided with it); /impressum is a short static
+   page that does not need it. */
 
 :root {
   --background: #ffffff;
@@ -41,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
   /* text */
   --tb-text: #ffffff;
   --tb-text-secondary: #9a9ba3;
-  --tb-text-tertiary: #7b8299;
+  --tb-text-tertiary: #9aa1b8;
   --tb-text-muted: #6b7086;
   --tb-text-bright: #c7c8d1;
   --tb-text-bright-2: #e4e5ea;
@@ -507,4 +507,45 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* ─── Landing redesign · section divider ──────────────── */
+/* One unified treatment: a centered, end-faded hairline with a small
+   accent diamond on it. Defined once here — <SectionDivider /> is propless
+   and renders no <style>. */
+
+.tb-divider {
+  position: relative;
+  width: min(var(--tb-max), calc(100% - 2 * var(--tb-gutter)));
+  height: 1px;
+  margin: clamp(28px, 6vh, 72px) auto;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.14) 50%,
+    transparent 100%
+  );
+}
+
+.tb-divider__node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--tb-accent);
+  opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tb-divider__node {
+    animation: tbDividerPulse 4.5s ease-in-out infinite;
+  }
+}
+
+@keyframes tbDividerPulse {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.5; }
 }

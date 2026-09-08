@@ -5,11 +5,14 @@ import AmbientField from "@/components/landing/redesign/AmbientField";
 import Navbar from "@/components/landing/redesign/Navbar";
 import Hero from "@/components/landing/redesign/Hero";
 import ProblemSolution from "@/components/landing/redesign/ProblemSolution";
+import HowItWorks from "@/components/landing/redesign/HowItWorks";
+import SocialProof from "@/components/landing/redesign/SocialProof";
 import Showcase from "@/components/landing/redesign/Showcase";
 import TrustBlocks from "@/components/landing/redesign/TrustBlocks";
 import Pricing from "@/components/landing/redesign/Pricing";
 import TeamContact from "@/components/landing/redesign/TeamContact";
 import FinalCta from "@/components/landing/redesign/FinalCta";
+import FAQ from "@/components/landing/redesign/FAQ";
 import SectionDivider from "@/components/landing/redesign/SectionDivider";
 import Footer from "@/components/landing/redesign/Footer";
 
@@ -28,15 +31,20 @@ export default function LandingPage() {
         <main id="tb-main">
           <Hero />
           <ProblemSolution />
-          <SectionDivider variant="line" />
+          <SectionDivider />
+          <HowItWorks />
+          <SocialProof />
+          <SectionDivider />
           <Showcase />
-          <SectionDivider variant="node" />
+          <SectionDivider />
           <TrustBlocks />
-          <SectionDivider variant="wide" />
+          <SectionDivider />
+          <FAQ />
+          <SectionDivider />
           <Pricing />
-          <SectionDivider variant="gap" />
+          <SectionDivider />
           <TeamContact />
-          <SectionDivider variant="line" />
+          <SectionDivider />
           <FinalCta />
         </main>
         <Footer />

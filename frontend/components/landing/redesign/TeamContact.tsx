@@ -1,11 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Eyebrow } from "./primitives";
 import { EASE_OUT, inView } from "@/lib/landing/motion";
 
 /* abstract topographic contour "portrait" - single accent hairline, no face */
 function Contour({ mirror = false }: { mirror?: boolean }) {
+  const reduce = useReducedMotion();
   const rings = [
     "M60,18 C90,18 108,40 108,70 C108,104 88,128 60,128 C32,128 12,104 12,70 C12,40 30,18 60,18 Z",
     "M60,30 C82,30 96,48 96,72 C96,98 80,116 60,116 C40,116 24,98 24,72 C24,48 38,30 60,30 Z",
@@ -49,7 +50,9 @@ function Contour({ mirror = false }: { mirror?: boolean }) {
         />
       ))}
       <circle cx="60" cy="74" r="2.5" fill="var(--tb-accent-cyan)">
-        <animate attributeName="opacity" values="0.3;1;0.3" dur="3.5s" repeatCount="indefinite" />
+        {!reduce && (
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="3.5s" repeatCount="indefinite" />
+        )}
       </circle>
     </motion.svg>
   );

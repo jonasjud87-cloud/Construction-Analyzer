@@ -1,14 +1,13 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { ok, err, unauthorized } from "@/lib/auth";
+import { getAuthUser, ok, err, unauthorized, forbidden } from "@/lib/auth";
 import { validateCreate } from "@/lib/validations/organization";
 import { slugify, uniqueSlug, formatOrg } from "@/lib/organizations";
 
 export async function GET() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return unauthorized();
+  if (user.role !== "super_admin") return forbidden();
 
   const admin = createAdminClient();
   const { data, error } = await admin
@@ -23,9 +22,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthUser();
   if (!user) return unauthorized();
+  if (user.role !== "super_admin") return forbidden();
 
   let body: unknown;
   try { body = await req.json(); } catch { return err("Ungültiger JSON-Body"); }
