@@ -17,7 +17,7 @@ const SA = [79, 209, 255]; // #4fd1ff
 const SB = [56, 189, 248]; // #38bdf8
 const SC = [40, 98, 215]; // #2862d7
 const ASSEMBLE_MS = 1900;
-const DESIRED = 1300;
+const DESIRED = 2600;
 
 const lp = (a: number, b: number, t: number) => a + (b - a) * t;
 const rnd = (s: number) => {
@@ -144,7 +144,7 @@ export default function IntroText() {
         h = Math.max(1, Math.round(canvas.clientHeight * dpr));
         canvas.width = w;
         canvas.height = h;
-        const step = Math.max(2, Math.round(dpr * 2));
+        const step = Math.max(2, Math.round(dpr * 1.4));
         const targets = sampleText(w, h, fam, step);
         const prev = parts;
         parts = targets.map((tg, i) => {
@@ -169,7 +169,7 @@ export default function IntroText() {
         const conv = Math.min(1, elapsed / ASSEMBLE_MS);
         const settled = elapsed >= ASSEMBLE_MS;
         const ease = 0.06 + 0.03 * conv;
-        const dot = Math.max(1, (isMobile ? 1.3 : 1.6) * dpr);
+        const dot = Math.max(0.85, (isMobile ? 0.95 : 1.1) * dpr);
         const t = elapsed / 1000;
 
         ctx.clearRect(0, 0, w, h);
